@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://repo.alibaba-inc.com/schema/imt"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://repo.alibaba-inc.com/schema/imt
+	http://repo.alibaba-inc.com/schema/imt/imt.xsd">
+	
+	<imt:imt id="interfaceManagementTool" remoteManage="true" key="acrm" remoteIp="0.0.0.0" remotePort="80" loginName="tester" loginPassword="1234" >
+		<imt:annotation-scan-paths >
+			<imt:path></imt:path>
+			<imt:path></imt:path>
+			<imt:path></imt:path>
+			<imt:path></imt:path>
+		</imt:annotation-scan-paths>
+		<imt:interface-class className="com.alibaba.xxx.SomeClass">
+			<imt:interface description="someMethod(int,java.lang.String)">
+				<imt:data>方法描述</imt:data>
+				<imt:data>作用范围</imt:data>
+				<imt:data>分组维度1</imt:data>
+				<imt:data>分组维度2</imt:data>
+				<imt:data>参数描述1</imt:data>
+				<imt:data>参数描述2</imt:data>
+			</imt:interface>
+			<imt:interface description="someMethod1(int,java.lang.String)">
+				<imt:data>方法描述</imt:data>
+				<imt:data>作用范围</imt:data>
+				<imt:data>分组维度1</imt:data>
+				<imt:data>分组维度2</imt:data>
+				<imt:data>参数描述1</imt:data>
+				<imt:data>参数描述2</imt:data>
+			</imt:interface>
+		</imt:interface-class>
+			
+	</imt:imt>
+
+</beans>

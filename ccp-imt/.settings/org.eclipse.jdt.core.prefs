@@ -1,0 +1,9 @@
+#Tue May 03 15:44:19 CST 2016
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+eclipse.preferences.version=1
+encoding/src/main/java=GBK
+org.eclipse.jdt.core.compiler.source=1.6
+encoding/src/test/resources=GBK
+encoding/src/main/resources=GBK
+encoding/src/test/java=GBK
+org.eclipse.jdt.core.compiler.compliance=1.6

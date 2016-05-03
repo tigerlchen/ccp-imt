@@ -1,0 +1,146 @@
+<html>
+<head>
+	<meta charset="$encoding"/>
+    <title>IMT</title>
+    <link rel="stylesheet" type="text/css" href="http://www.xiaoyaochong.net/simpletree.css"/>
+	<script type="text/javascript" src="http://www.xiaoyaochong.net/jquery.js"></script>  
+	<script type="text/javascript" src="http://www.xiaoyaochong.net/simpletree.js"></script>
+	
+	<style>
+		body {
+			font:12px 宋体;
+		}
+		table {
+			border-spacing: 0;
+		}
+		td {
+			border-bottom: 1px solid #ccd;
+			font:12px 宋体;
+		}
+		th {background:#ccc; height:30px; line-height:30px;}
+		tbody > tr:last-child > td{border-bottom:0;}
+	</style>
+</head>
+<body>
+
+#macro(renderMenu $groups)
+	<ul>
+	#foreach($group in $groups)
+		<li><a href="javascript:;" uuid="$group.uuid">$group.name</a></li>
+		#if($group.nexts)
+			#renderMenu($group.nexts)
+		#end
+	#end 
+	</ul>
+#end
+
+
+#if($authed)
+<div style="width: 80%; margin: 30px auto;">
+	<div class="st_tree" style="float: left;display: inline;width: 15%; border:1px solid #ccc;">
+		#renderMenu($groups)
+	</div>
+	
+	<div style="float:right; display:inline;width: 80%;border:1px solid #ccc; padding:10px;">
+
+			<fieldset style="border:1px solid #ccc; padding:10px; width:97%">
+			  <legend>&nbsp;IMT-界面&nbsp;</legend>
+				<table style="width: 100%;word-break:break-all;word-wrap:break-word;overflow:hidden;">
+				    <thead>
+						  <tr>
+						    <th style="width: 15%">描述</th>
+						    <th style="width: 25%">服务类</th>
+						    <th style="width: 12%">方法</th>
+						    <th style="width: 12%">返回类型</th>
+						    <th style="width: 11%">入参</th>
+						    <th style="width: 20%">服务BeanID</th>
+						    <th style="width: 5%">操作</th>
+					    </tr>
+					</thead>
+					
+					<tbody>
+						#foreach($item in $group.interfaceInfos)
+							<form id="form_${group.uuid}_$velocityCount">
+							<tr>
+								<td>$item.imtInfo.mehtodDescrption</td>
+								<td>$item.className</td>
+								<td>$item.methodName</td>
+								<td>$item.returnClass.getSimpleName()</td>
+								<td>
+									#foreach($arg in $item.argumentClasses)
+										#if($!item.imtInfo.paramDescrption.size() >= $velocityCount)
+											#set($argNum = $velocityCount - 1)
+											$!item.imtInfo.paramDescrption.get($argNum)
+										#else
+											$arg.getName();
+										#end
+										<input type="text" name="arg"/>
+									#end
+								</td>
+								<td>
+									<select name="additionalData" style="width:150px">
+										#foreach($addData in $item.additionalDatas)
+											<option value="$addData">$addData</option>
+										#end
+									</select>
+								</td>
+								<td>
+									<input type="hidden" name="key" value="$!item.key"/>
+									<input type="button" class="imt-invoke" formId="form_${group.uuid}_$velocityCount" value="提交"/>
+								</td>
+							</tr>
+							</form>
+						#end
+					</tbody>
+				</table>
+		</fieldset>
+		
+		<br/>
+		
+		<fieldset style="border:1px solid #ccc; padding:10px;">
+		  <legend>&nbsp;操作结果&nbsp;</legend>
+			<div id="imt-div-id-result"></div>
+		</fieldset>
+	</div>
+<br style="clear:both"/>
+
+</div>
+
+<script type="text/javascript">
+
+jQuery(function($) {
+	$(".imt-invoke").click(function() {
+		var formId = "#" + $(this).attr("formId");
+
+		$["ajax"]({
+			type: "POST",
+			url: "$url",
+			data: $(formId).serialize(),
+			cache: false,
+			success: function(result){
+				$('#imt-div-id-result').html(result);
+		  	}
+		});
+	});
+	
+	$(".st_tree").SimpleTree({
+		click:function(a){
+			if(!$(a).attr("hasChild")) {
+				location.href = "$url?uuid=" + $(a).attr("uuid");
+			}
+		},
+		
+		uuid: "$!uuid"
+	});
+});
+
+</script>
+
+#else
+
+#end
+
+
+
+</body>
+</html>
