@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.imt.annotation.AteyeInvoker;
 import com.alibaba.imt.annotation.Imt;
 import com.alibaba.imt.annotation.Interface;
 import com.alibaba.imt.asm.AnnotationVisitor;
@@ -33,7 +34,6 @@ import com.alibaba.imt.asm.Opcodes;
 import com.alibaba.imt.asm.Type;
 import com.alibaba.imt.handler.Handler;
 import com.alibaba.imt.util.Util;
-import com.taobao.ateye.annotation.AteyeInvoker;
 
 /**
  * @author yansong.baiys

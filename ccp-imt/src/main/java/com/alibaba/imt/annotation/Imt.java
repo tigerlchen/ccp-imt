@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.alibaba.imt.constants.InvokerType;
 import com.alibaba.imt.util.ImtConstant;
 
 /**
@@ -38,4 +39,10 @@ public @interface Imt {
 	 * @return
 	 */
 	String[] paramDescrption() default {};
+	
+	/**
+     * 方法类型，（只读、读写、Daily只读、Daily读写）
+     * @return
+     */
+    public InvokerType type() default InvokerType.READ_ONLY;
 }
