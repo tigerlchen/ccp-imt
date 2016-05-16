@@ -17,5 +17,10 @@ public enum ManagerType
     {
         this.managerClass=managerClass;
     }
+    
+    public static void main(String[] args) {
+        Object obj = ManagerType.valueOf("INVOKER");
+        System.out.println(obj);
+    }
 }
 

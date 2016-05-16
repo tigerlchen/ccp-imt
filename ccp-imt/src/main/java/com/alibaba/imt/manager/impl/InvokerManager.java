@@ -354,7 +354,7 @@ public class InvokerManager  implements AteyeManager
                         if (i == 0) {
                             paramDesc = params[i];
                         } else {
-                            paramDesc = "&" + params[i];
+                            paramDesc = paramDesc + "&" + params[i];
                         }
                     }
                     mi.setParamDesc(paramDesc);
