@@ -21,9 +21,9 @@ import org.apache.log4j.MDC;
 
 import com.alibaba.imt.config.AteyeServletConfig;
 import com.alibaba.imt.constants.ManagerType;
-import com.alibaba.imt.excaption.AteyeInitException;
 import com.alibaba.imt.log.Log4jFacility;
 import com.alibaba.imt.manager.AteyeManager;
+import com.alibaba.imt.manager.AteyeManagerContext;
 import com.alibaba.imt.manager.BaseManagerBeansUtil;
 import com.alibaba.imt.util.ManagerLoggerUtil;
 
@@ -39,7 +39,6 @@ import com.alibaba.imt.util.ManagerLoggerUtil;
 public class AteyeServlet extends HttpServlet {
     private static final long serialVersionUID = -4382366812508979253L;
     private static Logger logger = Logger.getLogger("ateyeClient");
-    private Map<ManagerType, AteyeManager> managerMap = new HashMap<ManagerType, AteyeManager>();
     private String webx2Config=null;
     public static Date startUpTime=new Date();
 
@@ -54,7 +53,7 @@ public class AteyeServlet extends HttpServlet {
         String type = request.getParameter("type");
         ManagerType managerType = ManagerType.valueOf(type);
         if (managerType != null) {
-            AteyeManager manager = managerMap.get(managerType);
+            AteyeManager manager = AteyeManagerContext.INSTANCE.getManagerMap().get(managerType);
             if (manager != null) {
                 out.println(manager.service(convertParamMap(request.getParameterMap())));
             } else {
@@ -126,34 +125,7 @@ public class AteyeServlet extends HttpServlet {
             bootstrapLogger.flush();
             ManagerLoggerUtil.invalidBootstrapStream();
             
-            //开始初始化具体的Manager
-            for (ManagerType type : ManagerType.values())
-            {
-                AteyeManager manager = null;
-                Class<? extends AteyeManager> managerClass = type.getManagerClass();
-                try
-                {
-                    manager = managerClass.newInstance();
-                } catch (Throwable e) {
-                    logger.error("实例化" + managerClass.getName() + "失败", e);
-                    continue;
-                }
-                try
-                {
-                    PrintStream managerLogger = ManagerLoggerUtil.getManagerLogger(type);
-                    manager.init(this.getServletContext(), managerLogger, beans);
-                    logger.info("初始化"+managerClass.getName()+"完成");
-                    managerLogger.flush();
-                    ManagerLoggerUtil.invalidInitLogger(type);
-                } catch(AteyeInitException ai) {
-                    logger.error("初始化" + managerClass.getName() + "严重异常，应用无法启动", ai);
-                    throw ai;
-                } catch(Throwable e) {
-                    logger.error("初始化" + managerClass.getName() + "异常", e);
-                    continue;
-                }
-                managerMap.put(type, manager);
-            }
+            AteyeManagerContext.INSTANCE.init(beans, this.getServletContext());
         }catch(Throwable t){
             logger.fatal("AteyeServlet初始化异常",t);
         }finally{
@@ -162,8 +134,6 @@ public class AteyeServlet extends HttpServlet {
         logger.info("AteyeServlet End");
         
     }
-    
-
 
     private void getPara() {
         String isRecord = getInitParameter("isRecordErrorLogger");
