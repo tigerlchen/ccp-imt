@@ -3,8 +3,8 @@ package com.alibaba.imt.adapter.privileges;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Ä¬ÈÏÊµÏÖÈ¨ÏŞ½Ó¿Ú
- * @author åĞ³å [2015Äê5ÔÂ16ÈÕ ÏÂÎç6:01:24]
+ * é»˜è®¤å®ç°æƒé™æ¥å£
+ * @author é€å†² [2015å¹´5æœˆ16æ—¥ ä¸‹åˆ6:01:24]
  */
 public class AbstractImtPrivilege implements ImtPrivilege{
 

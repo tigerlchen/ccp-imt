@@ -18,7 +18,7 @@ import com.alibaba.imt.manager.impl.LogControlManager;
 
 public class Log4jFacility {
     private static Logger logger = Logger.getLogger("ateyeClient");
-    
+
     public static void addAteyeClientLogger(){
         AteyeDailyRollingFileAppender appender = getAteyeClientAppender();
         Logger logger = Logger.getLogger("ateyeClient");
@@ -31,7 +31,7 @@ public class Log4jFacility {
     @SuppressWarnings("unchecked")
     public static void addCustomizedErrorAppender() {
         if ( ! AteyeServletConfig.isRecordLog4j ){
-            logger.info("isRecordLog4j¹Ø±Õ,²»¼à¿ØLog4jµÄ´íÎóÈÕÖ¾");
+            logger.info("isRecordLog4jå…³é—­,ä¸ç›‘æ§Log4jçš„é”™è¯¯æ—¥å¿—");
             return;
         }
         AteyeDailyRollingFileAppender appender = getCustomizedLog4jAppender();
@@ -47,7 +47,7 @@ public class Log4jFacility {
                 }
             }
         }
-        //Log4jµÄroot loggerÒªÌØ±ğ´¦Àí
+        //Log4jçš„root loggerè¦ç‰¹åˆ«å¤„ç†
         Logger root = LogManager.getRootLogger();
         if(root != null) {
             root.addAppender(appender);
@@ -97,7 +97,7 @@ public class Log4jFacility {
         appender.setLayout(pattern);
         appender.activateOptions();
         return appender;
-    }   
+    }
     public static List<LogVoBean> getAllLoggers() {
         List<LogVoBean> allLoggers = new ArrayList<LogVoBean>();
         try {
@@ -117,7 +117,7 @@ public class Log4jFacility {
                     }
                 }
             }
-            //Log4jµÄroot loggerÒªÌØ±ğ´¦Àí
+            //Log4jçš„root loggerè¦ç‰¹åˆ«å¤„ç†
             Logger root = LogManager.getRootLogger();
             if(root != null) {
                 String name = root.getName();
@@ -133,7 +133,7 @@ public class Log4jFacility {
         } catch (Throwable ignore) {}
         return allLoggers;
     }
-    
+
     public static void modifyLoggerLevel(String loggerName, String level) {
         try {
             Logger logger = Logger.getLogger(loggerName.trim());
@@ -159,5 +159,5 @@ public class Log4jFacility {
             }
         } catch (Throwable ignore) {}
     }
-    
+
 }

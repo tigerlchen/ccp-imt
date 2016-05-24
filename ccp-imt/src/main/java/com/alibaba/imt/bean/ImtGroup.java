@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * 根据group分组，生成menu
- * @author hongwei.quhw
- *
- */
 public class ImtGroup {
 	private final String uuid;
 	private ImtGroup previous;

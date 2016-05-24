@@ -6,18 +6,18 @@ import java.io.OutputStream;
 
 public class AteyeOutputStream extends OutputStream
 {
-    //Ä¬ÈÏÈİÁ¿ÏŞÖÆ£º1M
+    //é»˜è®¤å®¹é‡é™åˆ¶ï¼š1M
     public static final int _DEFAULT_LIMIT = 1024*1024;
     public final int limit;
     public ByteArrayOutputStream target;
     private boolean valid = true;
-    
+
     public AteyeOutputStream(ByteArrayOutputStream target)
     {
         this.target = target;
         limit = _DEFAULT_LIMIT;
     }
-    
+
     public AteyeOutputStream(ByteArrayOutputStream target, int limit)
     {
         if(target==null||limit<=0)
@@ -25,9 +25,9 @@ public class AteyeOutputStream extends OutputStream
         this.target = target;
         this.limit = limit;
     }
-    
-    
-    //ÄÚ´æÈÕÖ¾µÄ´óĞ¡ÏŞÖÆÎª1M
+
+
+    //å†…å­˜æ—¥å¿—çš„å¤§å°é™åˆ¶ä¸º1M
     @Override
     public void write(int b) throws IOException
     {
@@ -36,11 +36,11 @@ public class AteyeOutputStream extends OutputStream
             target.write(b);
         }
     }
-    public ByteArrayOutputStream getTarget() 
+    public ByteArrayOutputStream getTarget()
     {
         return target;
     }
-    //½«¸ÃOutputStreamÖÃÎªÎŞĞ§£¬¶ÔÎŞĞ§µÄOutputSteamµÄÊä³ö²Ù×÷ÎŞÈÎºÎ½á¹û
+    //å°†è¯¥OutputStreamç½®ä¸ºæ— æ•ˆï¼Œå¯¹æ— æ•ˆçš„OutputSteamçš„è¾“å‡ºæ“ä½œæ— ä»»ä½•ç»“æœ
     public void invalid()
     {
         valid=false;

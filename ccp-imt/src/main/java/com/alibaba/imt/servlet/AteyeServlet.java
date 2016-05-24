@@ -28,11 +28,11 @@ import com.alibaba.imt.manager.BaseManagerBeansUtil;
 import com.alibaba.imt.util.ManagerLoggerUtil;
 
 /**
- * ²ÎÊı
-    <init-param>
-        <param-name>isRecordErrorLogger</param-name>
-        <param-value>true</param-value>
-    </init-param>
+ * å‚æ•°
+ <init-param>
+ <param-name>isRecordErrorLogger</param-name>
+ <param-value>true</param-value>
+ </init-param>
  * @author leconte
  *
  */
@@ -57,10 +57,10 @@ public class AteyeServlet extends HttpServlet {
             if (manager != null) {
                 out.println(manager.service(convertParamMap(request.getParameterMap())));
             } else {
-                logger.error("Î´ÕÒµ½Õë¶ÔÇëÇóÀàĞÍ:" + type + "µÄManager");
+                logger.error("æœªæ‰¾åˆ°é’ˆå¯¹è¯·æ±‚ç±»å‹:" + type + "çš„Manager");
             }
         } else {
-            logger.error("ÎŞĞ§µÄÇëÇóÀàĞÍType:" + type);
+            logger.error("æ— æ•ˆçš„è¯·æ±‚ç±»å‹Type:" + type);
         }
     }
 
@@ -71,109 +71,109 @@ public class AteyeServlet extends HttpServlet {
     }
 
     @Override
-    public void init() 
+    public void init()
     {
         long tic = System.currentTimeMillis();
         try{
             String uuid = UUID.randomUUID().toString();
             MDC.put("uuid", uuid);
             MDC.put("start", System.currentTimeMillis());
-            //0.³õÊ¼»¯clientµÄLogger
+            //0.åˆå§‹åŒ–clientçš„Logger
             Log4jFacility.addAteyeClientLogger();
-            logger.info("AteyeClient Logger³õÊ¼»¯³É¹¦");
-            //1.servlet²ÎÊı»ñÈ¡
+            logger.info("AteyeClient Loggeråˆå§‹åŒ–æˆåŠŸ");
+            //1.servletå‚æ•°è·å–
             getPara();
-            
-            //»ñµÃÏµÍ³bootstrapµÄLogger
+
+            //è·å¾—ç³»ç»Ÿbootstrapçš„Logger
             PrintStream bootstrapLogger = ManagerLoggerUtil.getBootstrapLogger();
-            
-            //ÈËÎªÍÆ³Ùinit·½·¨µÄÖ´ĞĞ£¬±ÜÃâTrigger³öÏÖ¡®double¡¯ÏÖÏó
+
+            //äººä¸ºæ¨è¿Ÿinitæ–¹æ³•çš„æ‰§è¡Œï¼Œé¿å…Triggerå‡ºç°â€˜doubleâ€™ç°è±¡
             try
             {
-                bootstrapLogger.println("AgentServlet³õÊ¼»¯ĞİÃß£¨2s£©");
+                bootstrapLogger.println("AgentServletåˆå§‹åŒ–ä¼‘çœ ï¼ˆ2sï¼‰");
                 TimeUnit.SECONDS.sleep(2);
-                bootstrapLogger.println("AgentServlet½áÊøĞİÃß");
-            } 
-            catch (InterruptedException e1) 
-            {
-                bootstrapLogger.println("AgentServlet³õÊ¼»¯ĞİÃß±»interrupt");
+                bootstrapLogger.println("AgentServletç»“æŸä¼‘çœ ");
             }
-            
-            //È«²¿bean
+            catch (InterruptedException e1)
+            {
+                bootstrapLogger.println("AgentServletåˆå§‹åŒ–ä¼‘çœ è¢«interrupt");
+            }
+
+            //å…¨éƒ¨bean
             Map<String, Object> beans =new HashMap<String, Object>();
-            //webx2±êÊ¶²ÎÊı
+            //webx2æ ‡è¯†å‚æ•°
             webx2Config=this.getInitParameter("webx2Config");
-            //»ñÈ¡»ù±¾SpringµÄbean
+            //è·å–åŸºæœ¬Springçš„bean
             beans = BaseManagerBeansUtil.getAllBeans(this.getServletContext(), bootstrapLogger);
-            logger.info("springÈİÆ÷ÀïbeanÊıÁ¿:"+beans.size());
-    
-            //È·¶¨Îªwebx2»·¾³
+            logger.info("springå®¹å™¨é‡Œbeanæ•°é‡:"+beans.size());
+
+            //ç¡®å®šä¸ºwebx2ç¯å¢ƒ
             if(StringUtils.isNotBlank(webx2Config))
             {
                 Map<String, Object> allBeansFromWebx2 = BaseManagerBeansUtil.getAllBeansFromWebx2(webx2Config, bootstrapLogger);
-                logger.info("webx2»·¾³,webx2ÈİÆ÷ÀïbeanÊıÁ¿:"+beans.size());
+                logger.info("webx2ç¯å¢ƒ,webx2å®¹å™¨é‡Œbeanæ•°é‡:"+beans.size());
                 beans.putAll(allBeansFromWebx2);
             }
             else
             {
-                bootstrapLogger.println("·ÇWebx2»·¾³");
+                bootstrapLogger.println("éWebx2ç¯å¢ƒ");
             }
-            //½«ateye servletµÄÅäÖÃ×÷ÎªÒ»¸öbean¼ÓÈë¿ØÖÆ
+            //å°†ateye servletçš„é…ç½®ä½œä¸ºä¸€ä¸ªbeanåŠ å…¥æ§åˆ¶
             beans.put("___ateye_servlet_config___", new AteyeServletConfig());
-            logger.info("Ìí¼ÓÅäÖÃbean:___ateye_servlet_config___");
-            //½«ÏµÍ³bootstrapµÄÈÕÖ¾streamÖÃÎªÎŞĞ§
+            logger.info("æ·»åŠ é…ç½®bean:___ateye_servlet_config___");
+            //å°†ç³»ç»Ÿbootstrapçš„æ—¥å¿—streamç½®ä¸ºæ— æ•ˆ
             bootstrapLogger.flush();
             ManagerLoggerUtil.invalidBootstrapStream();
-            
+
             AteyeManagerContext.INSTANCE.init(beans, this.getServletContext());
         }catch(Throwable t){
-            logger.fatal("AteyeServlet³õÊ¼»¯Òì³£",t);
+            logger.fatal("AteyeServletåˆå§‹åŒ–å¼‚å¸¸",t);
         }finally{
-            logger.info("AteyeServlet³õÊ¼»¯½áÊø£¬ºÄÊ±"+(System.currentTimeMillis()-tic)+"ms");
+            logger.info("AteyeServletåˆå§‹åŒ–ç»“æŸï¼Œè€—æ—¶"+(System.currentTimeMillis()-tic)+"ms");
         }
         logger.info("AteyeServlet End");
-        
+
     }
 
     private void getPara() {
         String isRecord = getInitParameter("isRecordErrorLogger");
         if ( isRecord != null && isRecord.equals("false")){
             AteyeServletConfig.isRecordErrorLogger = Boolean.FALSE;
-            logger.warn("²ÎÊı:isRecordErrorLoggerµÄÖµÎªFalse£¬¹Ø±Õ´íÎóÈÕÖ¾ÊÕ¼¯");
+            logger.warn("å‚æ•°:isRecordErrorLoggerçš„å€¼ä¸ºFalseï¼Œå…³é—­é”™è¯¯æ—¥å¿—æ”¶é›†");
         }
         String isRecordLog4j = getInitParameter("isRecordLog4j");
         if ( isRecordLog4j != null && isRecordLog4j.equals("false")){
             AteyeServletConfig.isRecordLog4j = Boolean.FALSE;
-            logger.warn("²ÎÊı:isRecordLog4jµÄÖµÎªFalse£¬¹Ø±ÕLog4j´íÎóÈÕÖ¾ÊÕ¼¯");
+            logger.warn("å‚æ•°:isRecordLog4jçš„å€¼ä¸ºFalseï¼Œå…³é—­Log4jé”™è¯¯æ—¥å¿—æ”¶é›†");
         }
         AteyeServletConfig.appName = getInitParameter("app");
         if ( StringUtils.isBlank(AteyeServletConfig.appName) ){
-            logger.warn("²ÎÊıappÃ»ÓĞÉèÖÃ£¬½«ÎŞ·¨Ê¹ÓÃÄ³Ğ©¹¦ÄÜ");
+            logger.warn("å‚æ•°appæ²¡æœ‰è®¾ç½®ï¼Œå°†æ— æ³•ä½¿ç”¨æŸäº›åŠŸèƒ½");
             AteyeServletConfig.appName = "";
         }else{
-            logger.info("²ÎÊıapp:"+AteyeServletConfig.appName);
+            logger.info("å‚æ•°app:"+AteyeServletConfig.appName);
         }
         String isRecordSql = getInitParameter("recordSql");
         if ( isRecordSql != null && isRecordSql.equals("false")){
             AteyeServletConfig.isRecordSqlStat = Boolean.FALSE;
-            logger.warn("²ÎÊı:recordSqlµÄÖµÎªFalse£¬¹Ø±ÕSqlÂñµã");
+            logger.warn("å‚æ•°:recordSqlçš„å€¼ä¸ºFalseï¼Œå…³é—­SqlåŸ‹ç‚¹");
         }
         String kvTime = getInitParameter("kvTime");
         if ( kvTime != null ){
             Long kv = Long.valueOf(kvTime);
             AteyeServletConfig.setKvAwaitTime(kv);
-            logger.warn("²ÎÊı:kvAwaitTimeĞŞ¸ÄÎª:"+kvTime);
+            logger.warn("å‚æ•°:kvAwaitTimeä¿®æ”¹ä¸º:"+kvTime);
         }
     }
-    
+
     private Map<String,String> convertParamMap(Map<String,String[]> oriQueryMap) {
         Map<String,String> map = new HashMap<String,String>();
         for(Map.Entry<String,String[]> entry : oriQueryMap.entrySet()) {
             if(entry.getValue().length > 0) {
                 try {
                     /*
-                     * ×Ô°æ±¾1.2.0-SNAPSHOTºó£¬ateyeclient»á¶ÔÊäÈë²ÎÊı¶îÍâ½øĞĞÒ»´Îdecode£¨Ó¦ÓÃ·şÎñÆ÷»ádecodeÒ»´Î£©£¬¶øateyeÆ½Ì¨»áÔÚµ÷ÓÃÊ±¶Ô²ÎÊı½øĞĞÁ½´Îencode
-                     * ÓÃÕâÖÖ·½·¨À´Ïû³ıÖĞÎÄ±àÂë²»Í¬Ôì³ÉµÄÂÒÂëÎÊÌâ
+                     * è‡ªç‰ˆæœ¬1.2.0-SNAPSHOTåï¼Œateyeclientä¼šå¯¹è¾“å…¥å‚æ•°é¢å¤–è¿›è¡Œä¸€æ¬¡decodeï¼ˆåº”ç”¨æœåŠ¡å™¨ä¼šdecodeä¸€æ¬¡ï¼‰ï¼Œè€Œateyeå¹³å°ä¼šåœ¨è°ƒç”¨æ—¶å¯¹å‚æ•°è¿›è¡Œä¸¤æ¬¡encode
+                     * ç”¨è¿™ç§æ–¹æ³•æ¥æ¶ˆé™¤ä¸­æ–‡ç¼–ç ä¸åŒé€ æˆçš„ä¹±ç é—®é¢˜
                      */
                     map.put(entry.getKey(), URLDecoder.decode(entry.getValue()[0], "GBK"));
                 } catch (Exception e) {

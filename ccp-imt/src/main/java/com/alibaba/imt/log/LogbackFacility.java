@@ -24,9 +24,9 @@ import com.alibaba.imt.manager.impl.LogControlManager;
 import com.alibaba.imt.manager.impl.LogControlManager;
 
 public class LogbackFacility {
-    
+
     public static final String SP = (char)18 + "";
-    
+
     //add a customized error appender for all logback loggers
     public static void addCustomizedErrorAppender() {
         ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
@@ -37,7 +37,7 @@ public class LogbackFacility {
                 RollingFileAppender<ILoggingEvent> appender = getCustomizedLogbackAppender(loggerContext);
                 for(Logger logger : loggerList) {
                     Iterator<Appender<ILoggingEvent>> appenders = logger.iteratorForAppenders();
-                    if(appenders.hasNext()) { // ÓĞappenderµÄlogger²Å´¦Àí£¬¹ıÂËµô¿ò¼Ü×Ô´øµÄÃ»ÓĞlogÎÄ¼şÊä³öµÄlogger
+                    if(appenders.hasNext()) { // æœ‰appenderçš„loggeræ‰å¤„ç†ï¼Œè¿‡æ»¤æ‰æ¡†æ¶è‡ªå¸¦çš„æ²¡æœ‰logæ–‡ä»¶è¾“å‡ºçš„logger
                         if("ROOT".equalsIgnoreCase(logger.getName())) {
                             logger.addAppender(appender);
                         } else {
@@ -50,7 +50,7 @@ public class LogbackFacility {
             }
         }
     }
-     
+
     private static RollingFileAppender<ILoggingEvent> getCustomizedLogbackAppender(LoggerContext loggerContext) {
         RollingFileAppender<ILoggingEvent> appender = new RollingFileAppender<ILoggingEvent>();
         appender.setFile("/home/admin/ateye/error_logback.log");
@@ -77,7 +77,7 @@ public class LogbackFacility {
         rollingPolicy.setFileNamePattern("/home/admin/ateye/error_logback.log.%d{yyyy-MM-dd-HH}");
         rollingPolicy.setContext(loggerContext);
         rollingPolicy.setParent(appender);
-        rollingPolicy.setMaxHistory(6);//×î¶à±£Áô6·İ
+        rollingPolicy.setMaxHistory(6);//æœ€å¤šä¿ç•™6ä»½
         rollingPolicy.start();
         //assemble appender
         appender.setEncoder(encoder);
@@ -86,7 +86,7 @@ public class LogbackFacility {
         appender.start();
         return appender;
     }
-        
+
     public static List<LogVoBean> getAllLoggers() {
         List<LogVoBean> allLoggers = new ArrayList<LogVoBean>();
         try {
@@ -111,7 +111,7 @@ public class LogbackFacility {
         } catch (Throwable ignore) {}
         return allLoggers;
     }
-    
+
     public static void modifyLoggerLevel(String loggerName, String level) {
         try {
             Logger logger = (Logger) LoggerFactory.getLogger(loggerName.trim());
@@ -135,5 +135,5 @@ public class LogbackFacility {
             }
         } catch (Throwable ignore) {}
     }
-    
+
 }

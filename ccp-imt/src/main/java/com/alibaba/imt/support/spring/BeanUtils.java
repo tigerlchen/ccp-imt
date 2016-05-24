@@ -13,39 +13,39 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.WebApplicationContext;
 
 public class BeanUtils {
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getBeanByType(Class<T> clazz, ApplicationContext context) {
 		Assert.notNull(context);
 		Assert.notNull(clazz);
-		
-		//Spring3.0后才支持 <T> T getBean(Class<T> requiredType) throws BeansException;
-		//为了兼容以前版本，故如下
+
+		//Spring3.0鍚庢墠鏀寔 <T> T getBean(Class<T> requiredType) throws BeansException;
+		//涓轰簡鍏煎浠ュ墠鐗堟湰锛屾晠濡備笅
 		String[] names = context.getBeanNamesForType(clazz);
-		
+
 		if (null == names || names.length == 0) {
 			return null;
 		}
-		
+
 		List<T> beans = new ArrayList<T>();
-		
+
 		for (String name : names) {
 			beans.add((T)context.getBean(name));
 		}
-		
+
 		return beans;
 	}
 
 	public static WebApplicationContext findWebApplicationContext(ServletContext sc, String contextAttribute) {
 		WebApplicationContext webApplicationContext = null;
 		contextAttribute = trimToNull(contextAttribute);
-		
+
 		if (null == contextAttribute) {
 			webApplicationContext = getWebApplicationContext(sc);
 		} else {
 			webApplicationContext = getWebApplicationContext(sc, contextAttribute);
 		}
-		
+
 		return webApplicationContext;
-	} 
+	}
 }

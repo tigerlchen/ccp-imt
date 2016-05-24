@@ -1,8 +1,5 @@
 package com.alibaba.imt.excaption;
 
-/*
- * Ateye初始化异常，发生此异常将导致应用无法启动
- */
 public class AteyeInitException extends RuntimeException{
 
     private static final long serialVersionUID = 1798008724023647062L;

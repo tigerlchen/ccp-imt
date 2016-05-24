@@ -22,57 +22,57 @@ import com.alibaba.imt.web.ImtPageGen;
 import com.alibaba.imt.web.ImtWebContext;
 
 /**
- * ×ÊÔ´¼ÓÔØ¹¤¾ß
- * @author åÐ³å
+ * èµ„æºåŠ è½½å·¥å…·
+ * @author é€å†²
  *
  */
 public class ResourceUtil {
 	public static boolean isInitPage(ImtWebContext imtWebContext) {
 		return !isResource(imtWebContext) && !isContent(imtWebContext) && null == trimToNull(imtWebContext.getKey());
 	}
-	
+
 	public static boolean isContent(ImtWebContext imtWebContext) {
 		return null != trimToNull(imtWebContext.getUuid());
 	}
-	
+
 	public static boolean isMethodInvoke(ImtWebContext imtWebContext) {
 		return null != imtWebContext.getKey();
 	}
-	
+
 	public static boolean isResource(ImtWebContext imtWebContext) {
 		return isCssResource(imtWebContext) || isJsResource(imtWebContext) || isImgResource(imtWebContext);
 	}
-	
+
 	public static boolean isCssResource(ImtWebContext imtWebContext) {
 		return imtWebContext.getUrl().indexOf("/css") > 0;
 	}
-	
+
 	public static boolean isJsResource(ImtWebContext imtWebContext) {
 		return imtWebContext.getUrl().indexOf("/js") > 0;
 	}
-	
+
 	public static boolean isImgResource(ImtWebContext imtWebContext) {
 		return imtWebContext.getUrl().indexOf("/img") > 0;
 	}
-	
+
 	public static void renderPage(ImtWebContext imtWebContext) throws IOException {
 		imtWebContext.setHtmlContentType();
 		imtWebContext.render(merge(imtWebContext, "/vm/page.vm"));
 	}
-	
+
 	public static void renderJsResource(ImtWebContext imtWebContext) throws IOException {
 		imtWebContext.setJavaScriptContentType();
-		
+
 		int pos = imtWebContext.getUrl().indexOf("/js");
 		String path = imtWebContext.getUrl().substring(pos);
-		
+
 		InputStream is = null;
 		BufferedReader in = null;
-	    try {
-	    	is = ImtPageGen.class.getResourceAsStream(path);
-	    	in = new BufferedReader(new InputStreamReader(is));
-	    	
-	    	String line = "";
+		try {
+			is = ImtPageGen.class.getResourceAsStream(path);
+			in = new BufferedReader(new InputStreamReader(is));
+
+			String line = "";
 			while ((line = in.readLine()) != null){
 				imtWebContext.render(line);
 			}
@@ -91,24 +91,24 @@ public class ResourceUtil {
 			}
 		}
 	}
-	
+
 	public static void renderMethodInvoke(ImtWebContext imtWebContext) throws IOException {
 		imtWebContext.setHtmlContentType();
 		Object ret = imtWebContext.getInterfaceManagementTool().invoke(imtWebContext.getKey(), imtWebContext.getAdditionalData(), imtWebContext.getArgs());
 		imtWebContext.render(JSON.toJSONString(ret));
 	}
-	
+
 	public static void renderImgResource(ImtWebContext imtWebContext) throws IOException {
 		int pos = imtWebContext.getUrl().indexOf("/img");
 		String path = imtWebContext.getUrl().substring(pos);
-		
+
 		InputStream is = null;
-	    try {
-	    	is = ImtPageGen.class.getResourceAsStream(path);
-	    	byte[] b = new byte[4000];
-	    	is.read(b);
-	    	
-	    	imtWebContext.getResponse().getOutputStream().write(b);
+		try {
+			is = ImtPageGen.class.getResourceAsStream(path);
+			byte[] b = new byte[4000];
+			is.read(b);
+
+			imtWebContext.getResponse().getOutputStream().write(b);
 		} finally {
 			if (null != is) {
 				try {
@@ -118,18 +118,18 @@ public class ResourceUtil {
 			}
 		}
 	}
-	
+
 	public static void renderCssResource(ImtWebContext context) throws IOException {
 		context.setCssContentType();
-		
+
 		int pos = context.getUrl().indexOf("/css");
 		String path = context.getUrl().substring(pos);
 		context.put("url", context.getUrl().substring(0, pos));
 		context.put("encoding", context.getEncoding());
-		
+
 		context.render(merge(context, path));
 	}
-	
+
 	public static String merge(ImtWebContext context, String path) {
 		try {
 			VelocityEngine ve = new VelocityEngine();
@@ -139,18 +139,18 @@ public class ResourceUtil {
 			ve.setProperty("output.encoding", context.getEncoding());
 			ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, new NullLogChute());
 			ve.init();
-			
+
 			Template template = ve.getTemplate(path, context.getEncoding());
-			
+
 			StringWriter writer = new StringWriter();
 			template.merge(context, writer);
-			
+
 			return writer.toString();
 		} catch (Exception e) {
-			throw new RuntimeException("äÖÈ¾Ä£°æ³ö´í," , e);
+			throw new RuntimeException("æ¸²æŸ“æ¨¡ç‰ˆå‡ºé”™," , e);
 		}
 	}
-	
+
 	public static class ImtResourceLoader extends ResourceLoader {
 
 		@Override

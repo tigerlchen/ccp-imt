@@ -21,11 +21,11 @@ public class LogControlManager implements AteyeManager{
     private static Logger logger = Logger.getLogger("ateyeClient");
 
     public static final String LOGTYPE_LOG4J ="LOG4J";
-    
+
     public static final String LOGTYPE_LOGBACK ="LOGBACK";
-    
+
     private static final String[] logFacilities = {"com.taobao.ateye.log.LogbackFacility", "com.taobao.ateye.log.Log4jFacility"};
-    
+
     @Override
     public String service(Map<String, String> queryParams) {
         String json = null;
@@ -64,40 +64,40 @@ public class LogControlManager implements AteyeManager{
             json = JsonUtils.jsonEncode(allLoggers);
         }
         return json;
-        
+
     }
-    
+
     @Override
     public void init(ServletContext servletContext, PrintStream initLogger, Map<String, Object> beans) {
         if ( AteyeServletConfig.isRecordErrorLogger ){
             for(String logFacility : logFacilities) {
                 try {
                     Class<?> logFacilityClass = Class.forName(logFacility);
-                    logger.info("”¶”√÷ß≥÷:"+logFacility);
+                    logger.info("Â∫îÁî®ÊîØÊåÅ:"+logFacility);
                     if(logFacilityClass != null) {
                         Method addCustomizedErrorAppenderMethod = logFacilityClass.getMethod("addCustomizedErrorAppender", (Class<?>[])null);
                         if(addCustomizedErrorAppenderMethod != null) {
                             addCustomizedErrorAppenderMethod.invoke(null, (Object[])null);
-                            logger.info(logFacility+"ÃÌº”appender≥…π¶");
+                            logger.info(logFacility+"Ê∑ªÂä†appenderÊàêÂäü");
                         }
                     }
                 }catch (NoClassDefFoundError e){
-                    logger.warn("”¶”√≤ª÷ß≥÷:"+logFacility);
+                    logger.warn("Â∫îÁî®‰∏çÊîØÊåÅ:"+logFacility);
                 }catch (ClassNotFoundException e){
-                    logger.warn("”¶”√≤ª÷ß≥÷:"+logFacility);
+                    logger.warn("Â∫îÁî®‰∏çÊîØÊåÅ:"+logFacility);
                 }catch (Throwable t) {
-                    logger.error(logFacility+"ÃÌº”appender“Ï≥£",t);
+                    logger.error(logFacility+"Ê∑ªÂä†appenderÂºÇÂ∏∏",t);
                 }
             }
         }
-        
+
     }
 
     @Override
     public ManagerType getType() {
         return ManagerType.LOGCONTROL;
     }
-    
+
     private List<LogVoBean> getAllLoggers(){
         List<LogVoBean> allLoggers = new ArrayList<LogVoBean>();
         for(String logFacility : logFacilities) {
@@ -117,6 +117,6 @@ public class LogControlManager implements AteyeManager{
         }
         return allLoggers;
     }
-     
+
 }
 

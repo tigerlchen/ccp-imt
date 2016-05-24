@@ -18,9 +18,6 @@ package com.alibaba.imt.handler;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author yansong.baiys
- */
 public interface Handler {
 
     void handleClass(String className, List<Map<String, Object>> dataList);

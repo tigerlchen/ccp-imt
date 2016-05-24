@@ -17,10 +17,6 @@ package com.alibaba.imt.scanner;
 
 import java.util.Set;
 
-/**
- * @author yansong.baiys
- *
- */
 public interface Scanner {
 
     Set<String> scan(Set<String> pkgs);

@@ -13,95 +13,95 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.alibaba.imt.util.ManagerLoggerUtil;
 
-public class BaseManagerBeansUtil 
+public class BaseManagerBeansUtil
 {
     /**
-     * ªÒ»°webx2À˘π‹¿Ìµƒbeans
+     * Ëé∑Âèñwebx2ÊâÄÁÆ°ÁêÜÁöÑbeans
      * @param webx2Config
      * @return
-     * 
-     * ∑¥…‰«∞µƒ‘¥¬Î»Áœ¬£∫
-     * ServiceManager serviceManager = SingletonServiceManagerLoader.getInstance("/classpath/xxx-biz-service.xml");   // ”¶”√Spring◊‹≈‰÷√
+     *
+     * ÂèçÂ∞ÑÂâçÁöÑÊ∫êÁ†ÅÂ¶Ç‰∏ãÔºö
+     * ServiceManager serviceManager = SingletonServiceManagerLoader.getInstance("/classpath/xxx-biz-service.xml");   // Â∫îÁî®SpringÊÄªÈÖçÁΩÆ
      * BeanFactoryService beanFactoryService = (BeanFactoryService)serviceManager.getService(BeanFactoryService.SERVICE_NAME);
      * String[] beanNames = beanFactoryService.getBeanFactory().getBeanDefinitionNames();
      * for(int j = 0; j < beanNames.length; j++){
      * try{
      * Object obj = beanFactoryService.getBean(beanNames[j]);
      * if(obj != null){
-     *      // do something £¨such as deal special beans
+     *      // do something Ôºåsuch as deal special beans
      * }
      * }catch(Exception e){
      * e.printStackTrace();
      * }
      * }
-     * 
+     *
      */
     public static Map<String/*beanName*/, Object/*bean*/> getAllBeansFromWebx2(String webx2Config,PrintStream info)
     {
         Map<String, Object> beans =new HashMap<String, Object>();
-            try 
+        try
+        {
+            Class<?> serviceManagerClass=Class.forName("com.alibaba.service.ServiceManager");
+            Class<?> singletonServiceManagerLoaderClass=Class.forName("com.alibaba.service.context.SingletonServiceManagerLoader");
+            Class<?> beanFactoryServiceClass=Class.forName("com.alibaba.service.spring.BeanFactoryService");
+            Class<?> classUtilClass=Class.forName("com.alibaba.common.lang.ClassUtil");
+
+            Method getInstanceMethod=singletonServiceManagerLoaderClass.getMethod("getInstance", new Class[]{String.class});
+            Object serviceManager=getInstanceMethod.invoke(null, webx2Config);
+            if(serviceManagerClass.isInstance(serviceManager))
             {
-                Class<?> serviceManagerClass=Class.forName("com.alibaba.service.ServiceManager");
-                Class<?> singletonServiceManagerLoaderClass=Class.forName("com.alibaba.service.context.SingletonServiceManagerLoader");
-                Class<?> beanFactoryServiceClass=Class.forName("com.alibaba.service.spring.BeanFactoryService");
-                Class<?> classUtilClass=Class.forName("com.alibaba.common.lang.ClassUtil");
-                
-                Method getInstanceMethod=singletonServiceManagerLoaderClass.getMethod("getInstance", new Class[]{String.class});
-                Object serviceManager=getInstanceMethod.invoke(null, webx2Config);
-                if(serviceManagerClass.isInstance(serviceManager))
+                Method getServiceMethod=serviceManagerClass.getMethod("getService", new Class[]{String.class});
+                Method getShortClassNameMethod=classUtilClass.getMethod("getShortClassName", new Class[]{Class.class});
+                Object shortName=getShortClassNameMethod.invoke(null, beanFactoryServiceClass);
+                Object beanFactoryService=getServiceMethod.invoke(serviceManager, new Object[]{shortName});
+                if(beanFactoryServiceClass.isInstance(beanFactoryService))
                 {
-                     Method getServiceMethod=serviceManagerClass.getMethod("getService", new Class[]{String.class});
-                     Method getShortClassNameMethod=classUtilClass.getMethod("getShortClassName", new Class[]{Class.class});
-                     Object shortName=getShortClassNameMethod.invoke(null, beanFactoryServiceClass);
-                     Object beanFactoryService=getServiceMethod.invoke(serviceManager, new Object[]{shortName});
-                     if(beanFactoryServiceClass.isInstance(beanFactoryService))
-                     {
-                         Method getBeanFactoryMethod=beanFactoryServiceClass.getMethod("getBeanFactory", (Class<?>[])null);
-                         Object beanFactory=getBeanFactoryMethod.invoke(beanFactoryService, (Object[])null);
-                         if(ApplicationContext.class.isInstance(beanFactory))
-                         {
-                             Method getBeanMethod=beanFactoryServiceClass.getMethod("getBean", new Class[]{String.class});
-                             ApplicationContext myBeanFactory=(ApplicationContext) beanFactory;
-                             String[] beanNames = myBeanFactory.getBeanDefinitionNames();
-                             for(int j = 0; j < beanNames.length; j++)
-                             {
-                                 try
-                                 {
-                                     Object bean=getBeanMethod.invoke(beanFactoryService, beanNames[j]);
-                                     beans.put(beanNames[j], bean);
-                                 }
-                                 catch (Exception e) 
-                                 {
-                                    info.println("¥”Webx2µƒBean»›∆˜ªÒµ√bean“Ï≥££¨beanName:"+beanNames[j]+" “Ï≥£:"+ManagerLoggerUtil.convertThrowableToString(e));
-                                }
-                             }
-                         }
-                     }
-                 }
-            } 
-            catch (Exception e)
-            {
-                info.println("∑√Œ Webx2µƒBean»›∆˜“Ï≥£:"+ManagerLoggerUtil.convertThrowableToString(e));
+                    Method getBeanFactoryMethod=beanFactoryServiceClass.getMethod("getBeanFactory", (Class<?>[])null);
+                    Object beanFactory=getBeanFactoryMethod.invoke(beanFactoryService, (Object[])null);
+                    if(ApplicationContext.class.isInstance(beanFactory))
+                    {
+                        Method getBeanMethod=beanFactoryServiceClass.getMethod("getBean", new Class[]{String.class});
+                        ApplicationContext myBeanFactory=(ApplicationContext) beanFactory;
+                        String[] beanNames = myBeanFactory.getBeanDefinitionNames();
+                        for(int j = 0; j < beanNames.length; j++)
+                        {
+                            try
+                            {
+                                Object bean=getBeanMethod.invoke(beanFactoryService, beanNames[j]);
+                                beans.put(beanNames[j], bean);
+                            }
+                            catch (Exception e)
+                            {
+                                info.println("‰ªéWebx2ÁöÑBeanÂÆπÂô®Ëé∑ÂæóbeanÂºÇÂ∏∏ÔºåbeanName:"+beanNames[j]+" ÂºÇÂ∏∏:"+ManagerLoggerUtil.convertThrowableToString(e));
+                            }
+                        }
+                    }
+                }
             }
-            return beans;
+        }
+        catch (Exception e)
+        {
+            info.println("ËÆøÈóÆWebx2ÁöÑBeanÂÆπÂô®ÂºÇÂ∏∏:"+ManagerLoggerUtil.convertThrowableToString(e));
+        }
+        return beans;
     }
-    
+
     public static Map<String/*beanName*/, Object/*bean*/> getAllBeans(ServletContext servletContext, PrintStream info)
     {
         Map<String, Object> beans =new HashMap<String, Object>();
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         String[] beanNames = applicationContext.getBeanDefinitionNames();
-        for (String beanName : beanNames) 
+        for (String beanName : beanNames)
         {
-            try 
+            try
             {
                 Object bean = applicationContext.getBean(beanName);
                 if(bean!=null)
                 {
                     beans.put(beanName, bean);
                 }
-            } 
-            catch (Exception e) 
+            }
+            catch (Exception e)
             {
                 info.println("Exception when spring gets bean of name: "+beanName);
             }

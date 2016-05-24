@@ -32,41 +32,41 @@ import com.alibaba.imt.util.Util;
  */
 public class ImtNamespaceHandler extends NamespaceHandlerSupport {
 
-	private static final String PATHS_ELEMENT = "annotation-scan-paths";
-	private static final String CLASS_ELEMENT = "interface-class";
-	private static final String PATH_ELEMENT = "path";
-	private static final String DATA_ELEMENT = "data";
-	private static final String INTERFACE_ELEMENT = "interface";
-	private static final String CLASS_NAME_ATTR = "className";
-	private static final String DESCRIPTION_ATTR = "description";
-	private static final String PRIVILEGE_ELEMENT = "privilege";
+    private static final String PATHS_ELEMENT = "annotation-scan-paths";
+    private static final String CLASS_ELEMENT = "interface-class";
+    private static final String PATH_ELEMENT = "path";
+    private static final String DATA_ELEMENT = "data";
+    private static final String INTERFACE_ELEMENT = "interface";
+    private static final String CLASS_NAME_ATTR = "className";
+    private static final String DESCRIPTION_ATTR = "description";
+    private static final String PRIVILEGE_ELEMENT = "privilege";
 
 
-	public void init() {
-		registerBeanDefinitionParser("imt", new ImtBeanDefinitionParser());
-	}
+    public void init() {
+        registerBeanDefinitionParser("imt", new ImtBeanDefinitionParser());
+    }
 
 
-	private static class ImtBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
+    private static class ImtBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-	    private boolean annotationScan = false;
-		@Override
-		protected Class<?> getBeanClass(Element element) {
-			return InterfaceManagementTool.class;
-		}
+        private boolean annotationScan = false;
+        @Override
+        protected Class<?> getBeanClass(Element element) {
+            return InterfaceManagementTool.class;
+        }
 
-		@Override
-		protected String resolveId(Element element, AbstractBeanDefinition definition, ParserContext parserContext) {
-			String id = super.resolveId(element, definition, parserContext);
-			return id;
-		}
-		
-		@Override
+        @Override
+        protected String resolveId(Element element, AbstractBeanDefinition definition, ParserContext parserContext) {
+            String id = super.resolveId(element, definition, parserContext);
+            return id;
+        }
+
+        @Override
         protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder) {
-		    super.doParse(element, parserContext, builder);
-		    Set<String> paths = new HashSet<String>();
-		    List<Map<String,Object>> xmlDataList = new ArrayList<Map<String,Object>>();
-		    String privilegeBean = null;
+            super.doParse(element, parserContext, builder);
+            Set<String> paths = new HashSet<String>();
+            List<Map<String,Object>> xmlDataList = new ArrayList<Map<String,Object>>();
+            String privilegeBean = null;
 		    /*List<Element> childElts = DomUtils.getChildElements(element);
 	        for (Element elt: childElts) {
 	            String localName = parserContext.getDelegate().getLocalName(elt);
@@ -79,35 +79,35 @@ public class ImtNamespaceHandler extends NamespaceHandlerSupport {
 	                privilegeBean = elt.getAttribute("ref");
 	            }
 	        }*/
-		    Element pathsElement = DomUtils.getChildElementByTagName(element, PATHS_ELEMENT);
-		    if(pathsElement != null){
-		        parsePathsElement(pathsElement, parserContext, paths);
-		    }
-		    Element classElement = DomUtils.getChildElementByTagName(element, CLASS_ELEMENT);
-		    if(classElement != null){
-		        parseClassElement(classElement, parserContext, xmlDataList);
-		    }
-		    Element privilegeElement = DomUtils.getChildElementByTagName(element, PRIVILEGE_ELEMENT);
-		    if(privilegeElement != null){
-		        privilegeBean = privilegeElement.getAttribute("ref");
-		        builder.addPropertyReference("imtPrivilege", privilegeBean);
-		    }
+            Element pathsElement = DomUtils.getChildElementByTagName(element, PATHS_ELEMENT);
+            if(pathsElement != null){
+                parsePathsElement(pathsElement, parserContext, paths);
+            }
+            Element classElement = DomUtils.getChildElementByTagName(element, CLASS_ELEMENT);
+            if(classElement != null){
+                parseClassElement(classElement, parserContext, xmlDataList);
+            }
+            Element privilegeElement = DomUtils.getChildElementByTagName(element, PRIVILEGE_ELEMENT);
+            if(privilegeElement != null){
+                privilegeBean = privilegeElement.getAttribute("ref");
+                builder.addPropertyReference("imtPrivilege", privilegeBean);
+            }
 
-		    //Ω´SpringBeanAdapter∑≈µΩspring »›∆˜÷– 
-		    GenericBeanDefinition springBeanAdapterDB = new GenericBeanDefinition();
+            //Â∞ÜSpringBeanAdapterÊîæÂà∞spring ÂÆπÂô®‰∏≠
+            GenericBeanDefinition springBeanAdapterDB = new GenericBeanDefinition();
             springBeanAdapterDB.setBeanClass(SpringBeanAdapter.class);
             parserContext.getRegistry().registerBeanDefinition("springBeanAdapterDB", springBeanAdapterDB);
-		    
+
             builder.addPropertyValue("annotationScan", annotationScan);
             builder.addPropertyValue("paths", paths);
             builder.addPropertyValue("xmlDataList", xmlDataList);
             builder.addPropertyReference("beanAdapter", "springBeanAdapterDB");
             builder.addPropertyValue("scanner", new SpringClassScanner());
             builder.setInitMethodName("init");
-            
-           
+
+
         }
-		
+
         /**
          * @param element
          * @param parserContext
@@ -136,21 +136,21 @@ public class ImtNamespaceHandler extends NamespaceHandlerSupport {
                             throw new RuntimeException(e);
                         }
                         String internalClassName = Type.getInternalName(clazz);
-                        
+
                         String methodName = Util.getMethodNameFromMethodExternalDesc(description);
                         Class<?>[] parameterTypes = Util.getParameterTypesFromMethodExternalDesc(description);
-                        
+
                         Method method;
                         try {
                             method = clazz.getMethod(methodName, parameterTypes);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
-                        } 
+                        }
                         Object[] wrappedParameterTypes = wrapSingleArray(parameterTypes);
                         String methodDesc = Type.getMethodDescriptor(method);
                         Type returnType = Type.getReturnType(methodDesc);
                         Class<?> returnClass = Util.getClass(returnType);
-                        
+
                         dataMap.put("key", className + "." + description);
                         dataMap.put("internalClassName", internalClassName);
                         dataMap.put("className", className);
@@ -171,7 +171,7 @@ public class ImtNamespaceHandler extends NamespaceHandlerSupport {
          * @return
          */
         private Object[] wrapSingleArray(Object[] objs) {
-            //”…”⁄springµƒTypeConverterDelegate¿‡÷–convertIfNecessary∑Ω∑®÷–ª·Ω´≥§∂»Œ™1µƒ ˝◊È◊™Œ™µ•∏ˆ∂‘œÛ£¨’‚”∞œÏµΩ¡ÀŒ“√«Ω”œ¬¿¥mapToBeanµƒ∑¥…‰£¨À˘“‘’‚¿Ô“™∂‡∞¸“ª≤„ ˝◊È
+            //Áî±‰∫éspringÁöÑTypeConverterDelegateÁ±ª‰∏≠convertIfNecessaryÊñπÊ≥ï‰∏≠‰ºöÂ∞ÜÈïøÂ∫¶‰∏∫1ÁöÑÊï∞ÁªÑËΩ¨‰∏∫Âçï‰∏™ÂØπË±°ÔºåËøôÂΩ±ÂìçÂà∞‰∫ÜÊàë‰ª¨Êé•‰∏ãÊù•mapToBeanÁöÑÂèçÂ∞ÑÔºåÊâÄ‰ª•ËøôÈáåË¶ÅÂ§öÂåÖ‰∏ÄÂ±ÇÊï∞ÁªÑ
             if(objs.length == 1){
                 Object[] wrapObj = new Object[1];
                 wrapObj[0] = objs;
@@ -191,8 +191,8 @@ public class ImtNamespaceHandler extends NamespaceHandlerSupport {
                 String value = DomUtils.getTextValue(pkgElt).trim();
                 pkgs.add(value);
             }
-            
+
         }
-	}
+    }
 
 }

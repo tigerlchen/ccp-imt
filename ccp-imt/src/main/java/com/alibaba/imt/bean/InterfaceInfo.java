@@ -16,10 +16,6 @@
 package com.alibaba.imt.bean;
 
 
-/**
- * @author yansong.baiys
- *
- */
 public class InterfaceInfo {
 
     private String key;

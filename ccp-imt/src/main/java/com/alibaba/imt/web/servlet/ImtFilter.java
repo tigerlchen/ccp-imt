@@ -33,8 +33,8 @@ import com.alibaba.imt.manager.AteyeManagerContext;
 import com.alibaba.imt.util.ResourceUtil.ImtResourceLoader;
 
 /**
- * IMT WEB Í³Ò»Èë¿Ú
- * 
+ * IMT WEB ç»Ÿä¸€å…¥å£
+ *
  * @author hongwei.quhw
  */
 public class ImtFilter implements Filter {
@@ -46,7 +46,7 @@ public class ImtFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-                                                                                             ServletException {
+            ServletException {
         request.setCharacterEncoding(DEFAULT_ENCODING);
         response.setCharacterEncoding("gb2312");
         response.setContentType("application/json;charset=gb2312");
@@ -71,7 +71,7 @@ public class ImtFilter implements Filter {
 
             out.println(merge(imtWebContext, "/vm/page.vm"));
         } else {
-            logger.error("Î´ÕÒµ½Õë¶ÔÇëÇóÀàÐÍ:InvokerManager");
+            logger.error("æœªæ‰¾åˆ°é’ˆå¯¹è¯·æ±‚ç±»åž‹:InvokerManager");
         }
     }
 
@@ -92,7 +92,7 @@ public class ImtFilter implements Filter {
 
             return writer.toString();
         } catch (Exception e) {
-            throw new RuntimeException("äÖÈ¾Ä£°æ³ö´í,", e);
+            throw new RuntimeException("æ¸²æŸ“æ¨¡ç‰ˆå‡ºé”™,", e);
         }
     }
 
@@ -102,8 +102,8 @@ public class ImtFilter implements Filter {
             if (entry.getValue().length > 0) {
                 try {
                     /*
-                     * ×Ô°æ±¾1.2.0-SNAPSHOTºó£¬ateyeclient»á¶ÔÊäÈë²ÎÊý¶îÍâ½øÐÐÒ»´Îdecode£¨Ó¦ÓÃ·þÎñÆ÷»ádecodeÒ»´Î£©£¬¶øateyeÆ½Ì¨»áÔÚµ÷ÓÃÊ±¶Ô²ÎÊý½øÐÐÁ½´Îencode
-                     * ÓÃÕâÖÖ·½·¨À´Ïû³ýÖÐÎÄ±àÂë²»Í¬Ôì³ÉµÄÂÒÂëÎÊÌâ
+                     * è‡ªç‰ˆæœ¬1.2.0-SNAPSHOTåŽï¼Œateyeclientä¼šå¯¹è¾“å…¥å‚æ•°é¢å¤–è¿›è¡Œä¸€æ¬¡decodeï¼ˆåº”ç”¨æœåŠ¡å™¨ä¼šdecodeä¸€æ¬¡ï¼‰ï¼Œè€Œateyeå¹³å°ä¼šåœ¨è°ƒç”¨æ—¶å¯¹å‚æ•°è¿›è¡Œä¸¤æ¬¡encode
+                     * ç”¨è¿™ç§æ–¹æ³•æ¥æ¶ˆé™¤ä¸­æ–‡ç¼–ç ä¸åŒé€ æˆçš„ä¹±ç é—®é¢˜
                      */
                     map.put(entry.getKey(), URLDecoder.decode(entry.getValue()[0], "GBK"));
                 } catch (Exception e) {

@@ -13,19 +13,19 @@ import com.alibaba.imt.excaption.AteyeInitException;
 import com.alibaba.imt.util.ManagerLoggerUtil;
 
 public class AteyeManagerContext {
-    
+
     private static Logger logger = Logger.getLogger("ateyeClient");
-    
+
     public static AteyeManagerContext INSTANCE = new AteyeManagerContext();
-    
+
     private final Map<ManagerType, AteyeManager> managerMap = new HashMap<ManagerType, AteyeManager>();
-    
+
     private AteyeManagerContext() {
-        
+
     }
-    
+
     public void init(Map<String, Object> beans, ServletContext servletContext) {
-        //¿ªÊ¼³õÊ¼»¯¾ßÌåµÄManager
+        //å¼€å§‹åˆå§‹åŒ–å…·ä½“çš„Manager
         for (ManagerType type : ManagerType.values())
         {
             AteyeManager manager = null;
@@ -34,27 +34,27 @@ public class AteyeManagerContext {
             {
                 manager = managerClass.newInstance();
             } catch (Throwable e) {
-                logger.error("ÊµÀı»¯" + managerClass.getName() + "Ê§°Ü", e);
+                logger.error("å®ä¾‹åŒ–" + managerClass.getName() + "å¤±è´¥", e);
                 continue;
             }
             try
             {
                 PrintStream managerLogger = ManagerLoggerUtil.getManagerLogger(type);
                 manager.init(servletContext, managerLogger, beans);
-                logger.info("³õÊ¼»¯"+managerClass.getName()+"Íê³É");
+                logger.info("åˆå§‹åŒ–"+managerClass.getName()+"å®Œæˆ");
                 managerLogger.flush();
                 ManagerLoggerUtil.invalidInitLogger(type);
             } catch(AteyeInitException ai) {
-                logger.error("³õÊ¼»¯" + managerClass.getName() + "ÑÏÖØÒì³££¬Ó¦ÓÃÎŞ·¨Æô¶¯", ai);
+                logger.error("åˆå§‹åŒ–" + managerClass.getName() + "ä¸¥é‡å¼‚å¸¸ï¼Œåº”ç”¨æ— æ³•å¯åŠ¨", ai);
                 throw ai;
             } catch(Throwable e) {
-                logger.error("³õÊ¼»¯" + managerClass.getName() + "Òì³£", e);
+                logger.error("åˆå§‹åŒ–" + managerClass.getName() + "å¼‚å¸¸", e);
                 continue;
             }
             managerMap.put(type, manager);
         }
     }
-    
+
     public Map<ManagerType, AteyeManager> getManagerMap() {
         return managerMap;
     }

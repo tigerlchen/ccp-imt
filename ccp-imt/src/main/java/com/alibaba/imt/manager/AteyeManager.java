@@ -10,20 +10,20 @@ import com.alibaba.imt.constants.ManagerType;
 public interface AteyeManager
 {
     /**
-     * ManagerµÄÊµ¼Ê²Ù×÷·½·¨
-     * @param queryParams ÇëÇó²ÎÊıµÄMap
-     * @return ·µ»ØµÄ²Ù×÷½á¹û×Ö·û´®
+     * Managerçš„å®é™…æ“ä½œæ–¹æ³•
+     * @param queryParams è¯·æ±‚å‚æ•°çš„Map
+     * @return è¿”å›çš„æ“ä½œç»“æœå­—ç¬¦ä¸²
      */
     public String service(Map<String,String> queryParams);
-    
+
     /**
-     * ManagerµÄ³õÊ¼»¯·½·¨£¬´«ÈëServletµÄÉÏÏÂÎÄ»·¾³
-     * @param servletContext ServletÉÏÏÂÎÄ»·¾³
+     * Managerçš„åˆå§‹åŒ–æ–¹æ³•ï¼Œä¼ å…¥Servletçš„ä¸Šä¸‹æ–‡ç¯å¢ƒ
+     * @param servletContext Servletä¸Šä¸‹æ–‡ç¯å¢ƒ
      */
     public void init(ServletContext servletContext, PrintStream initLogger,Map<String, Object> beans);
-    
+
     /**
-     * ±êÊ¾¸ÃManagerµÄÒµÎñÀàĞÍ£¬·µ»ØÃ¶¾ÙÀàĞÍ
+     * æ ‡ç¤ºè¯¥Managerçš„ä¸šåŠ¡ç±»å‹ï¼Œè¿”å›æšä¸¾ç±»å‹
      * @return ManagerType.SWITCH | ManagerType.QUARTZ | ManagerType.LOGCONTROL
      */
     public ManagerType getType();

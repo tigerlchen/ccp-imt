@@ -2,15 +2,15 @@ package com.alibaba.imt.log;
 
 public class LogVoBean{
     /**
-     * logger的name
+     * logger鐨刵ame
      */
     private String name;
     /**
-     * logger的level
+     * logger鐨刲evel
      */
     private String level;
     /**
-     * 判断是log4j还是logback的logger
+     * 鍒ゆ柇鏄痩og4j杩樻槸logback鐨刲ogger
      */
     private String type;
     public String getName() {

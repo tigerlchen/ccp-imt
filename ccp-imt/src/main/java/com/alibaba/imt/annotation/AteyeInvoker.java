@@ -9,23 +9,23 @@ import com.alibaba.imt.constants.InvokerType;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AteyeInvoker 
-{   
+public @interface AteyeInvoker
+{
 
     /**
-     * ·½·¨µÄ¹¦ÄÜÃèÊö
+     * æ–¹æ³•çš„åŠŸèƒ½æè¿°
      * @return
      */
     public String description() default "";
     /**
-     * ²ÎÊıµÄÃèÊöĞÅÏ¢[Èç¹ûÊÇÃ»ÓĞ²ÎÊıµÄ£¬¾ÍÊÇÄ¬ÈÏÖµ¿Õ´®£»Èç¹ûÓĞ²ÎÊıµÄĞ´³ÉÒ»¸ö×Ö·û´®£¬ÖĞ¼äÓÃ·Ö¸ô·û&·Ö¿ª]
-     * ±ÈÈçÓĞÈı¸ö²ÎÊıµÄ·½·¨travel(String startPoint,String endPoint,Date time)
-     * Á¬½Ó³ÉµÄ×Ö·û´®ÀıÈç£ºÆğµã&ÖÕµã&Ê±¼ä
+     * å‚æ•°çš„æè¿°ä¿¡æ¯[å¦‚æœæ˜¯æ²¡æœ‰å‚æ•°çš„ï¼Œå°±æ˜¯é»˜è®¤å€¼ç©ºä¸²ï¼›å¦‚æœæœ‰å‚æ•°çš„å†™æˆä¸€ä¸ªå­—ç¬¦ä¸²ï¼Œä¸­é—´ç”¨åˆ†éš”ç¬¦&åˆ†å¼€]
+     * æ¯”å¦‚æœ‰ä¸‰ä¸ªå‚æ•°çš„æ–¹æ³•travel(String startPoint,String endPoint,Date time)
+     * è¿æ¥æˆçš„å­—ç¬¦ä¸²ä¾‹å¦‚ï¼šèµ·ç‚¹&ç»ˆç‚¹&æ—¶é—´
      * @return
      */
     public String paraDesc() default "";
     /**
-     * ·½·¨ÀàĞÍ£¬£¨Ö»¶Á¡¢¶ÁĞ´¡¢DailyÖ»¶Á¡¢Daily¶ÁĞ´£©
+     * æ–¹æ³•ç±»å‹ï¼Œï¼ˆåªè¯»ã€è¯»å†™ã€Dailyåªè¯»ã€Dailyè¯»å†™ï¼‰
      * @return
      */
     public InvokerType type() default InvokerType.READ_ONLY;

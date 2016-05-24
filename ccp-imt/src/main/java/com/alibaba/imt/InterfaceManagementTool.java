@@ -45,35 +45,35 @@ public class InterfaceManagementTool{
     private boolean annotationScan = false;
     private ImtPrivilege imtPrivilege;
     private List<ImtGroup> imtGroups;
-   
+
     public void init(){
-    	try{
-	        if(dataList == null){
-	        	dataList = new ArrayList<Map<String,Object>>();
-	        }else{
-	        	dataList.clear();
-	        }
-	        if(scanner == null){
-	            scanner = new SimpleClassScanner();
-	        }
-	        Set<String> classResourceSet = scanner.scan(paths);
-	        if(handler == null){
-	            handler = new InterfaceHandler();
-	        }
-	        for(String classResource : classResourceSet){
-	            handler.handleClass(classResource, dataList);
-	        }
-	        if(xmlDataList != null){
-	            dataList.addAll(xmlDataList);
-	        }
-    	}catch(Exception e){
-    		//There is for container can start up normally
-    		dataList = null;
-    		e.printStackTrace();
-    	}
-        
+        try{
+            if(dataList == null){
+                dataList = new ArrayList<Map<String,Object>>();
+            }else{
+                dataList.clear();
+            }
+            if(scanner == null){
+                scanner = new SimpleClassScanner();
+            }
+            Set<String> classResourceSet = scanner.scan(paths);
+            if(handler == null){
+                handler = new InterfaceHandler();
+            }
+            for(String classResource : classResourceSet){
+                handler.handleClass(classResource, dataList);
+            }
+            if(xmlDataList != null){
+                dataList.addAll(xmlDataList);
+            }
+        }catch(Exception e){
+            //There is for container can start up normally
+            dataList = null;
+            e.printStackTrace();
+        }
+
     }
-    
+
     private void initData(){
         if(interfaceInfoList == null || interfaceInfoMap == null){
             interfaceInfoList = new ArrayList<InterfaceInfo>();
@@ -89,115 +89,115 @@ public class InterfaceManagementTool{
             }
             InterfaceInfo ii = Util.mapToBean(data, InterfaceInfo.class);
             ImtInfo imtInfo = Util.mapToBean(data, ImtInfo.class);
-            
+
             if (ii.getDatas() != null && ii.getDatas().length  >= 4) {
-            	imtInfo = new ImtInfo();
-            	imtInfo.setMehtodDescrption(ii.getDatas()[0]);
-            	imtInfo.setGroup(new String[] {ii.getDatas()[2], ii.getDatas()[3]});
-            	imtInfo.setEnv(ii.getDatas()[1]);
-            	int paraLength = ii.getDatas().length -4;
-            	if (paraLength > 0) {
-            		String[] params = new String[paraLength];
-            		for (int i  = 0; i < paraLength; i++) {
-            			params[i] = ii.getDatas()[4 + i];
-            		}
-            		imtInfo.setParamDescrption(params);
-            	}
+                imtInfo = new ImtInfo();
+                imtInfo.setMehtodDescrption(ii.getDatas()[0]);
+                imtInfo.setGroup(new String[] {ii.getDatas()[2], ii.getDatas()[3]});
+                imtInfo.setEnv(ii.getDatas()[1]);
+                int paraLength = ii.getDatas().length -4;
+                if (paraLength > 0) {
+                    String[] params = new String[paraLength];
+                    for (int i  = 0; i < paraLength; i++) {
+                        params[i] = ii.getDatas()[4 + i];
+                    }
+                    imtInfo.setParamDescrption(params);
+                }
             }
-            
+
             if (null != ii && null != imtInfo) {
-            	ii.setImtInfo(imtInfo);
+                ii.setImtInfo(imtInfo);
             }
-            
+
             interfaceInfoList.add(ii);
             interfaceInfoMap.put(ii.getKey(), ii);
         }
     }
-    
+
     public void initGroups() {
-    	if (null == imtGroups) {
-    		imtGroups = new ArrayList<ImtGroup>();
-    		List<InterfaceInfo> interfaceInfos = getInterfaceInfoList();
-    		for (InterfaceInfo info : interfaceInfos) {
-    			String[] datas = info.getDatas();
-    			if (null != info.getImtInfo() && null != trimToNull(info.getImtInfo().getMehtodDescrption())) {
-    				ImtInfo imtInfo = info.getImtInfo();
-    				String[] groupsArray = imtInfo.getGroup();
-    				ImtGroup imtGroup = null;
-    				if (null != groupsArray && groupsArray.length > 0) {
-    					imtGroup = new ImtGroup(groupsArray[0]);
-    					
-    					int index = imtGroups.indexOf(imtGroup);
-    					if (index != -1) {
-    						imtGroup =  imtGroups.get(index);
-    					} else {
-    						imtGroups.add(imtGroup);
-    					}
-    					
-    					ImtGroup previous = imtGroup;
-    					for (int i = 1; i < groupsArray.length; i++) {
-    						ImtGroup nextGroup = previous.getNextGroupByName(groupsArray[i]);
-    						if (null == nextGroup) {
-    							nextGroup = new ImtGroup(groupsArray[i]);
-    							previous.addNext(nextGroup);
-    						} 
-    						previous = nextGroup;
-    					}
-    					
-    					previous.addInterfaceInfo(info);
-    				} else {
-    					imtGroup = new ImtGroup(imtInfo.getMehtodDescrption());
-    					int index = imtGroups.indexOf(imtGroup);
-    					if (index != -1) {
-    						imtGroup =  imtGroups.get(index);
-    					} else {
-    						imtGroups.add(imtGroup);
-    					}
-    					imtGroup.addInterfaceInfo(info);
-    				}
-    				
-    			} else if (null != datas && datas.length >= 3) {
-    				//¿œ◊¢Ω‚“‘ ˝◊È–Œ Ω
-    				ImtGroup group = new ImtGroup(datas[2]);
-    				int index = imtGroups.indexOf(group);
-    				if (index != -1) {
-    					group =  imtGroups.get(index);
-    				} else {
-    					imtGroups.add(group);
-    				}
-    				
-    				try {
-    					//next group ƒø«∞œ»÷ß≥÷∂˛Œ¨
-    					ImtGroup nextGroup = group.getNextGroupByName(datas[3]);
-    					if (null == nextGroup) {
-    						nextGroup = new ImtGroup(datas[3]);
-    						group.addNext(nextGroup);
-    					} 
-    					
-    					nextGroup.addInterfaceInfo(info);
-    				} catch (IndexOutOfBoundsException e) {
-    					// “ªŒ¨∑÷◊È
-    					group.addInterfaceInfo(info);
-    				}
-    			}
-    		}
-    	}
+        if (null == imtGroups) {
+            imtGroups = new ArrayList<ImtGroup>();
+            List<InterfaceInfo> interfaceInfos = getInterfaceInfoList();
+            for (InterfaceInfo info : interfaceInfos) {
+                String[] datas = info.getDatas();
+                if (null != info.getImtInfo() && null != trimToNull(info.getImtInfo().getMehtodDescrption())) {
+                    ImtInfo imtInfo = info.getImtInfo();
+                    String[] groupsArray = imtInfo.getGroup();
+                    ImtGroup imtGroup = null;
+                    if (null != groupsArray && groupsArray.length > 0) {
+                        imtGroup = new ImtGroup(groupsArray[0]);
+
+                        int index = imtGroups.indexOf(imtGroup);
+                        if (index != -1) {
+                            imtGroup =  imtGroups.get(index);
+                        } else {
+                            imtGroups.add(imtGroup);
+                        }
+
+                        ImtGroup previous = imtGroup;
+                        for (int i = 1; i < groupsArray.length; i++) {
+                            ImtGroup nextGroup = previous.getNextGroupByName(groupsArray[i]);
+                            if (null == nextGroup) {
+                                nextGroup = new ImtGroup(groupsArray[i]);
+                                previous.addNext(nextGroup);
+                            }
+                            previous = nextGroup;
+                        }
+
+                        previous.addInterfaceInfo(info);
+                    } else {
+                        imtGroup = new ImtGroup(imtInfo.getMehtodDescrption());
+                        int index = imtGroups.indexOf(imtGroup);
+                        if (index != -1) {
+                            imtGroup =  imtGroups.get(index);
+                        } else {
+                            imtGroups.add(imtGroup);
+                        }
+                        imtGroup.addInterfaceInfo(info);
+                    }
+
+                } else if (null != datas && datas.length >= 3) {
+                    //ËÄÅÊ≥®Ëß£‰ª•Êï∞ÁªÑÂΩ¢Âºè
+                    ImtGroup group = new ImtGroup(datas[2]);
+                    int index = imtGroups.indexOf(group);
+                    if (index != -1) {
+                        group =  imtGroups.get(index);
+                    } else {
+                        imtGroups.add(group);
+                    }
+
+                    try {
+                        //next group ÁõÆÂâçÂÖàÊîØÊåÅ‰∫åÁª¥
+                        ImtGroup nextGroup = group.getNextGroupByName(datas[3]);
+                        if (null == nextGroup) {
+                            nextGroup = new ImtGroup(datas[3]);
+                            group.addNext(nextGroup);
+                        }
+
+                        nextGroup.addInterfaceInfo(info);
+                    } catch (IndexOutOfBoundsException e) {
+                        // ‰∏ÄÁª¥ÂàÜÁªÑ
+                        group.addInterfaceInfo(info);
+                    }
+                }
+            }
+        }
     }
-    
+
     public List<InterfaceInfo> getInterfaceInfoList(boolean refresh){
-    	if(refresh){
-    		init();
-    	}
-    	if(interfaceInfoList == null || refresh){
-    	    initData();
-    	}
-    	return this.interfaceInfoList;
+        if(refresh){
+            init();
+        }
+        if(interfaceInfoList == null || refresh){
+            initData();
+        }
+        return this.interfaceInfoList;
     }
-    
+
     public List<InterfaceInfo> getInterfaceInfoList(){
-    	return getInterfaceInfoList(false);
+        return getInterfaceInfoList(false);
     }
-    
+
     public Map<String, InterfaceInfo> getInterfaceInfoMap(boolean refresh){
         if(refresh){
             init();
@@ -205,20 +205,20 @@ public class InterfaceManagementTool{
         if(interfaceInfoMap == null || refresh){
             initData();
         }
-    	return this.interfaceInfoMap;
+        return this.interfaceInfoMap;
     }
-    
+
     public Map<String, InterfaceInfo> getInterfaceInfoMap(){
-    	return getInterfaceInfoMap(false);
+        return getInterfaceInfoMap(false);
     }
-    
+
     public Object invoke(String key, Object[] additionalDatas, Object[] args){
         InterfaceInfo ii = getInterfaceInfoMap().get(key);
         if(ii == null){
-        	throw new RuntimeException("No class and method can be found: " + key);
+            throw new RuntimeException("No class and method can be found: " + key);
         }
         Class<?>[] argumentClasses = ii.getArgumentClasses();
-        //∑¿÷πø’÷∏’Î
+        //Èò≤Ê≠¢Á©∫ÊåáÈíà
         if (null == args) {
             args = new Object[0];
         }
@@ -227,9 +227,9 @@ public class InterfaceManagementTool{
         if(!checkResult.isPassed()){
             return checkResult.getResult();
         }
-        
+
         Class<?> clazz = ii.getClazz();
-        
+
         Method method = null;
         Object result = null;
         Object object = null;
@@ -249,7 +249,7 @@ public class InterfaceManagementTool{
                 }
                 result = method.invoke(object, args);
             }
-        
+
         } catch (Exception e) {
             String stackTrace = "";
             StringWriter writer = new StringWriter();
@@ -258,11 +258,11 @@ public class InterfaceManagementTool{
                 stackTrace = writer.getBuffer().toString();
             }finally {
                 if(writer != null)
-                try {
-                    writer.close();
-                }catch (Exception ee) {
-                    ee.printStackTrace();
-                }
+                    try {
+                        writer.close();
+                    }catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
             }
             //stackTrace = stackTrace.replaceAll("\r\n", "<br/>");
             StringBuilder sb = new StringBuilder("Method invoke has cause a exception :");
@@ -272,14 +272,14 @@ public class InterfaceManagementTool{
             return sb.toString();
         }
         return result;
-        
+
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private CheckResult<String> checkAndConvertArgs(Class<?>[] argumentClasses, Object[] args) {
         CheckResult<String> cr = new CheckResult<String>();
         cr.setPassed(true);
-        
+
         int argumentClassesLength = argumentClasses.length;
         int argsLength = args.length;
         if(argumentClassesLength != argsLength){
@@ -343,7 +343,7 @@ public class InterfaceManagementTool{
         T[] arr = list.toArray((T[])Array.newInstance(componentType, 0));
         return arr;
     }
-    
+
     public Set<String> getPaths() {
         return paths;
     }
@@ -399,7 +399,7 @@ public class InterfaceManagementTool{
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
-    
+
     public ImtPrivilege getImtPrivilege() {
         return imtPrivilege;
     }
@@ -409,15 +409,15 @@ public class InterfaceManagementTool{
     }
 
 
-	public List<ImtGroup> getImtGroups() {
-		return imtGroups;
-	}
+    public List<ImtGroup> getImtGroups() {
+        return imtGroups;
+    }
 
-	public void setImtGroups(List<ImtGroup> imtGroups) {
-		this.imtGroups = imtGroups;
-	}
+    public void setImtGroups(List<ImtGroup> imtGroups) {
+        this.imtGroups = imtGroups;
+    }
 
-	public static void main( String[] args ){
+    public static void main( String[] args ){
 
         Set<String> paths = new HashSet<String>();
         paths.add("com.alibaba.imt");
@@ -427,7 +427,7 @@ public class InterfaceManagementTool{
         imt.init();
         List<InterfaceInfo> interfaceInfoList = imt.getInterfaceInfoList();
         for(InterfaceInfo interfaceInfo : interfaceInfoList){
-            
+
             System.out.println("key:" + interfaceInfo.getKey());
             System.out.println("methodName:" + interfaceInfo.getMethodName());
             System.out.println("returnClass:" + interfaceInfo.getReturnClass());
@@ -437,8 +437,8 @@ public class InterfaceManagementTool{
                 System.out.println("group==" + group);
             }
         }
-        Object obj = imt.invoke(Util.generateKey("com.alibaba.imt.Test", "testMethod2", "(ILjava/lang/String;)Ljava/lang/String;"), null, new Object[]{18, "ƒ„∫√"});
+        Object obj = imt.invoke(Util.generateKey("com.alibaba.imt.Test", "testMethod2", "(ILjava/lang/String;)Ljava/lang/String;"), null, new Object[]{18, "‰Ω†Â•Ω"});
         System.out.println("this is result:" + obj);
-        
+
     }
 }

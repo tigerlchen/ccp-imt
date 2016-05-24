@@ -1,21 +1,21 @@
 package com.alibaba.imt.constants;
 
-public enum InvokerType 
+public enum InvokerType
 {
     /**
-     * 需要只读权限才能访问；
+     * 闇�瑕佸彧璇绘潈闄愭墠鑳借闂紱
      */
     READ_ONLY,
     /**
-     * 需要读写权限才能访问；
+     * 闇�瑕佽鍐欐潈闄愭墠鑳借闂紱
      */
     READ_WRITE,
     /**
-     * 只在daily环境下可访问，需要只读权限；
+     * 鍙湪daily鐜涓嬪彲璁块棶锛岄渶瑕佸彧璇绘潈闄愶紱
      */
     DAILY_READ,
     /**
-     * 只在daily环境下可访问，需要读写权限；
+     * 鍙湪daily鐜涓嬪彲璁块棶锛岄渶瑕佽鍐欐潈闄愶紱
      */
     DAILY_WRITE
 }

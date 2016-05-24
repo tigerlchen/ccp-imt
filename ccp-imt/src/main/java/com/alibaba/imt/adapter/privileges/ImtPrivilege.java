@@ -3,15 +3,15 @@ package com.alibaba.imt.adapter.privileges;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * È¨ÏŞ»Øµ÷£¬ÓÃÓÚ»ñÈ¡µÇÂ½ÓÃ»§
- * Ó¦ÓÃ·½ĞèÊµÏÖ´Ë½Ó¿Ú
- * Ã»ÓĞÊµÏÖimt²»×öÈ¨ÏŞ¿ØÖÆ
- * @author åĞ³å
+ * æƒé™å›è°ƒï¼Œç”¨äºè·å–ç™»é™†ç”¨æˆ·
+ * åº”ç”¨æ–¹éœ€å®ç°æ­¤æ¥å£
+ * æ²¡æœ‰å®ç°imtä¸åšæƒé™æ§åˆ¶
+ * @author é€å†²
  *
  */
 public interface ImtPrivilege {
-	
+
 	boolean authUser();
-	
+
 	boolean authUser(HttpServletRequest request);
 }

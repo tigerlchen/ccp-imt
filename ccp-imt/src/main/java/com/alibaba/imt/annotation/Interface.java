@@ -1,9 +1,9 @@
 /**
  * Project: imt
- * 
+ *
  * File Created at 2012-9-18
  * $Id: Interface.java 471736 2013-03-06 08:55:11Z admin.for.perth $
- * 
+ *
  * Copyright 1999-2100 Alibaba.com Corporation Limited.
  * All rights reserved.
  *
@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author åĞ³å
+ * @author é€å†²
  *
  */
 @Target(ElementType.METHOD)
@@ -29,16 +29,16 @@ import java.lang.annotation.Target;
 public @interface Interface {
 	/**
 	 * @Interface(datas = { 
-	 * 		"data mi test",    		·½·¨ÃèÊö
-	 * 		"product",				ÊÇ·ñÏßÉÏ
-	 * 		"Data Migration",   	·Ö×éÒ»
-	 * 		"correct trade data",	·Ö×é¶ş
-	 * 		"param1" 				µÚÒ»¸ö²ÎÊı
-	 * 		"param2"				µÚ¶ş¸ö²ÎÊı
-	 * 		...						²ÎÊı¿ÉÒÔÎŞÏŞ¸ö						
+	 * 		"data mi test",    		æ–¹æ³•æè¿°
+	 * 		"product",				æ˜¯å¦çº¿ä¸Š
+	 * 		"Data Migration",   	åˆ†ç»„ä¸€
+	 * 		"correct trade data",	åˆ†ç»„äºŒ
+	 * 		"param1" 				ç¬¬ä¸€ä¸ªå‚æ•°
+	 * 		"param2"				ç¬¬äºŒä¸ªå‚æ•°
+	 * 		...						å‚æ•°å¯ä»¥æ— é™ä¸ª						
 	 * 	})
-	 * 
-	 *  ÀÏ×¢½â·½Ê½
+	 *
+	 *  è€æ³¨è§£æ–¹å¼
 	 */
 	String[] datas();
 }

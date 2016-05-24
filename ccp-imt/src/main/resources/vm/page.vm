@@ -1,72 +1,72 @@
 <html>
 <head>
-	<meta charset="$encoding"/>
+    <meta charset="$encoding"/>
     <title>IMT</title>
     <link rel="stylesheet" type="text/css" href="http://www.xiaoyaochong.net/simpletree.css"/>
-	<script type="text/javascript" src="http://www.xiaoyaochong.net/jquery.js"></script>  
-	<script type="text/javascript" src="http://www.xiaoyaochong.net/simpletree.js"></script>
-	
-	<style>
-		body {
-			font:12px ÀŒÃÂ;
-		}
-		table {
-			border-spacing: 0;
-		}
-		td {
-			border-bottom: 1px solid #ccd;
-			font:12px ÀŒÃÂ;
-		}
-		th {background:#ccc; height:30px; line-height:30px;}
-		tbody > tr:last-child > td{border-bottom:0;}
-	</style>
+    <script type="text/javascript" src="http://www.xiaoyaochong.net/jquery.js"></script>
+    <script type="text/javascript" src="http://www.xiaoyaochong.net/simpletree.js"></script>
+
+    <style>
+        body {
+            font:12px ÂÆã‰Ωì;
+        }
+        table {
+            border-spacing: 0;
+        }
+        td {
+            border-bottom: 1px solid #ccd;
+            font:12px ÂÆã‰Ωì;
+        }
+        th {background:#ccc; height:30px; line-height:30px;}
+        tbody > tr:last-child > td{border-bottom:0;}
+    </style>
 </head>
 <body>
 
-#macro(renderMenu $groups)
-	<ul>
-	#foreach($group in $groups)
-		<li><a href="javascript:;" uuid="$group.uuid">$group.name</a></li>
-		#if($group.nexts)
-			#renderMenu($group.nexts)
+	#macro(renderMenu $groups)
+    <ul>
+		#foreach($group in $groups)
+            <li><a href="javascript:;" uuid="$group.uuid">$group.name</a></li>
+			#if($group.nexts)
+				#renderMenu($group.nexts)
+			#end
 		#end
-	#end 
-	</ul>
-#end
+    </ul>
+	#end
 
 
-#if($authed)
-<div style="width: 80%; margin: 30px auto;">
-	<div class="st_tree" style="float: left;display: inline;width: 15%; border:1px solid #ccc;">
-		#renderMenu($groups)
-	</div>
-	
-	<div style="float:right; display:inline;width: 80%;border:1px solid #ccc; padding:10px;">
+	#if($authed)
+    <div style="width: 80%; margin: 30px auto;">
+        <div class="st_tree" style="float: left;display: inline;width: 15%; border:1px solid #ccc;">
+			#renderMenu($groups)
+        </div>
 
-			<fieldset style="border:1px solid #ccc; padding:10px; width:97%">
-			  <legend>&nbsp;IMT-ΩÁ√Ê&nbsp;</legend>
-				<table style="width: 100%;word-break:break-all;word-wrap:break-word;overflow:hidden;">
-				    <thead>
-						  <tr>
-						    <th style="width: 15%">√Ë ˆ</th>
-						    <th style="width: 25%">∑˛ŒÒ¿‡</th>
-						    <th style="width: 12%">∑Ω∑®</th>
-						    <th style="width: 12%">∑µªÿ¿‡–Õ</th>
-						    <th style="width: 11%">»Î≤Œ</th>
-						    <th style="width: 20%">∑˛ŒÒBeanID</th>
-						    <th style="width: 5%">≤Ÿ◊˜</th>
-					    </tr>
-					</thead>
-					
-					<tbody>
+        <div style="float:right; display:inline;width: 80%;border:1px solid #ccc; padding:10px;">
+
+            <fieldset style="border:1px solid #ccc; padding:10px; width:97%">
+                <legend>&nbsp;IMT-ÁïåÈù¢&nbsp;</legend>
+                <table style="width: 100%;word-break:break-all;word-wrap:break-word;overflow:hidden;">
+                    <thead>
+                    <tr>
+                        <th style="width: 15%">ÊèèËø∞</th>
+                        <th style="width: 25%">ÊúçÂä°Á±ª</th>
+                        <th style="width: 12%">ÊñπÊ≥ï</th>
+                        <th style="width: 12%">ËøîÂõûÁ±ªÂûã</th>
+                        <th style="width: 11%">ÂÖ•ÂèÇ</th>
+                        <th style="width: 20%">ÊúçÂä°BeanID</th>
+                        <th style="width: 5%">Êìç‰Ωú</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
 						#foreach($item in $group.interfaceInfos)
-							<form id="form_${group.uuid}_$velocityCount">
-							<tr>
-								<td>$item.imtInfo.mehtodDescrption</td>
-								<td>$item.className</td>
-								<td>$item.methodName</td>
-								<td>$item.returnClass.getSimpleName()</td>
-								<td>
+                        <form id="form_${group.uuid}_$velocityCount">
+                            <tr>
+                                <td>$item.imtInfo.mehtodDescrption</td>
+                                <td>$item.className</td>
+                                <td>$item.methodName</td>
+                                <td>$item.returnClass.getSimpleName()</td>
+                                <td>
 									#foreach($arg in $item.argumentClasses)
 										#if($!item.imtInfo.paramDescrption.size() >= $velocityCount)
 											#set($argNum = $velocityCount - 1)
@@ -74,71 +74,71 @@
 										#else
 											$arg.getName();
 										#end
-										<input type="text" name="arg"/>
+                                        <input type="text" name="arg"/>
 									#end
-								</td>
-								<td>
-									<select name="additionalData" style="width:150px">
+                                </td>
+                                <td>
+                                    <select name="additionalData" style="width:150px">
 										#foreach($addData in $item.additionalDatas)
-											<option value="$addData">$addData</option>
+                                            <option value="$addData">$addData</option>
 										#end
-									</select>
-								</td>
-								<td>
-									<input type="hidden" name="key" value="$!item.key"/>
-									<input type="button" class="imt-invoke" formId="form_${group.uuid}_$velocityCount" value="Ã·Ωª"/>
-								</td>
-							</tr>
-							</form>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="key" value="$!item.key"/>
+                                    <input type="button" class="imt-invoke" formId="form_${group.uuid}_$velocityCount" value="Êèê‰∫§"/>
+                                </td>
+                            </tr>
+                        </form>
 						#end
-					</tbody>
-				</table>
-		</fieldset>
-		
-		<br/>
-		
-		<fieldset style="border:1px solid #ccc; padding:10px;">
-		  <legend>&nbsp;≤Ÿ◊˜Ω·π˚&nbsp;</legend>
-			<div id="imt-div-id-result"></div>
-		</fieldset>
-	</div>
-<br style="clear:both"/>
+                    </tbody>
+                </table>
+            </fieldset>
 
-</div>
+            <br/>
 
-<script type="text/javascript">
+            <fieldset style="border:1px solid #ccc; padding:10px;">
+                <legend>&nbsp;Êìç‰ΩúÁªìÊûú&nbsp;</legend>
+                <div id="imt-div-id-result"></div>
+            </fieldset>
+        </div>
+        <br style="clear:both"/>
 
-jQuery(function($) {
-	$(".imt-invoke").click(function() {
-		var formId = "#" + $(this).attr("formId");
+    </div>
 
-		$["ajax"]({
-			type: "POST",
-			url: "$url",
-			data: $(formId).serialize(),
-			cache: false,
-			success: function(result){
-				$('#imt-div-id-result').html(result);
-		  	}
-		});
-	});
-	
-	$(".st_tree").SimpleTree({
-		click:function(a){
-			if(!$(a).attr("hasChild")) {
-				location.href = "$url?uuid=" + $(a).attr("uuid");
-			}
-		},
-		
-		uuid: "$!uuid"
-	});
-});
+    <script type="text/javascript">
 
-</script>
+        jQuery(function($) {
+            $(".imt-invoke").click(function() {
+                var formId = "#" + $(this).attr("formId");
 
-#else
+                $["ajax"]({
+                    type: "POST",
+                    url: "$url",
+                    data: $(formId).serialize(),
+                    cache: false,
+                    success: function(result){
+                        $('#imt-div-id-result').html(result);
+                    }
+                });
+            });
 
-#end
+            $(".st_tree").SimpleTree({
+                click:function(a){
+                    if(!$(a).attr("hasChild")) {
+                        location.href = "$url?uuid=" + $(a).attr("uuid");
+                    }
+                },
+
+                uuid: "$!uuid"
+            });
+        });
+
+    </script>
+
+	#else
+
+	#end
 
 
 

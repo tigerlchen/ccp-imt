@@ -34,7 +34,7 @@ public class InvokerManager  implements AteyeManager
     private static Logger logger = Logger.getLogger("ateyeClient");
     private PrintStream info = null;
     private Map<String, Object> beans=new HashMap<String, Object>();
-    
+
     private static Map<Class<?>, Class<?>> typeConverter = new HashMap<Class<?>, Class<?>>();
     static{
         typeConverter.put(boolean.class, Boolean.class);
@@ -57,7 +57,7 @@ public class InvokerManager  implements AteyeManager
         typeConverter.put(String.class, String.class);
         typeConverter.put(Date.class, Date.class);
     }
-    
+
     private static Set<Class<?>> fundamentalType = new HashSet<Class<?>>();
     static{
         fundamentalType.add(boolean.class);
@@ -69,17 +69,17 @@ public class InvokerManager  implements AteyeManager
         fundamentalType.add(float.class);
         fundamentalType.add(double.class);
     }
-    
+
     Map<String/*BeanName*/,Map<String/*MethodSignature*/,MethodInfo>> invokers=new HashMap<String/*BeanName*/,Map<String/*MethodSignature*/,MethodInfo>>();
     @Override
     public String service(Map<String, String> queryParams)
     {
         String action = queryParams.get("action");
-        if ("list".equalsIgnoreCase(action)) 
+        if ("list".equalsIgnoreCase(action))
         {
             JSONArray methods = queryAllInvokersInfo();
             return methods.toString();
-        } 
+        }
         else if("single".equalsIgnoreCase(action))
         {
             String beanName = queryParams.get("beanName");
@@ -87,16 +87,16 @@ public class InvokerManager  implements AteyeManager
             JSONObject method = querySingleInvokerInfo(beanName,signature);
             return method.toString();
         }
-        else if ("invoke".equalsIgnoreCase(action)) 
+        else if ("invoke".equalsIgnoreCase(action))
         {
             JSONArray array = new JSONArray();
             JSONObject json = new JSONObject();
             JSONObject method = null;
             String beanName = queryParams.get("beanName");
             String signature = queryParams.get("signature");
-            if (this.invokers.get(beanName) != null) 
+            if (this.invokers.get(beanName) != null)
             {
-                if (this.invokers.get(beanName).get(signature) != null) 
+                if (this.invokers.get(beanName).get(signature) != null)
                 {
                     method = querySingleInvokerInfo(beanName,signature);
                     MethodInfo mi = this.invokers.get(beanName).get(signature);
@@ -109,9 +109,9 @@ public class InvokerManager  implements AteyeManager
                         for(int i=0;i<mi.getParams().size();i++)
                         {
                             ParamInfo pi = mi.getParams().get(i);
-                            //¿ÕÖµµÄÉèÖÃ¡£
+                            //ç©ºå€¼çš„è®¾ç½®ã€‚
                             if(nullParamsIndex != null && nullParamsIndex.contains(i+1)){
-                                if(fundamentalType.contains(pi.paramType)){//»ù±¾ÀàĞÍ²»ÄÜÉèÖÃ¿ÕÖµ
+                                if(fundamentalType.contains(pi.paramType)){//åŸºæœ¬ç±»å‹ä¸èƒ½è®¾ç½®ç©ºå€¼
                                     json.put("success", "false");
                                     json.put("errorMsg", "The "+(i+1)+"th param is fundamental type, cannot set null");
                                     array.add(json);
@@ -121,7 +121,7 @@ public class InvokerManager  implements AteyeManager
                                 paramValues[i] = null;
                                 continue;
                             }
-                            
+
                             String paramValueStr = queryParams.get("param"+(i+1));
                             if(paramValueStr!=null)
                             {
@@ -185,14 +185,14 @@ public class InvokerManager  implements AteyeManager
                         json.put("success", "true");
                         json.put("exception", ManagerLoggerUtil.convertThrowableToString(e));
                     }
-                } 
-                else 
+                }
+                else
                 {
                     json.put("success", "false");
                     json.put("errorMsg", "Invalid Signature:" + signature);
                 }
-            } 
-            else 
+            }
+            else
             {
                 json.put("success", "false");
                 json.put("errorMsg", "Invalid BeanName:" + beanName);
@@ -200,8 +200,8 @@ public class InvokerManager  implements AteyeManager
             array.add(json);
             array.add(method);
             return array.toString();
-        } 
-        else 
+        }
+        else
         {
             JSONObject json = new JSONObject();
             json.put("success", "false");
@@ -209,7 +209,7 @@ public class InvokerManager  implements AteyeManager
             return json.toString();
         }
     }
-    
+
     /**
      * @param nullParams
      * @return
@@ -234,11 +234,11 @@ public class InvokerManager  implements AteyeManager
         return paramSet;
     }
 
-    private JSONArray queryAllInvokersInfo() 
+    private JSONArray queryAllInvokersInfo()
     {
         JSONArray methods = new JSONArray();
         for (Map.Entry<String, Map<String, MethodInfo>> entry_out : invokers
-                .entrySet()) 
+                .entrySet())
         {
             String beanName = entry_out.getKey();
             Map<String, MethodInfo> value = entry_out.getValue();
@@ -250,8 +250,8 @@ public class InvokerManager  implements AteyeManager
         }
         return methods;
     }
-    
-    //²éÑ¯µ¥¸öinvoker
+
+    //æŸ¥è¯¢å•ä¸ªinvoker
     private JSONObject querySingleInvokerInfo(String beanName,String signature)
     {
         JSONObject json = new JSONObject();
@@ -265,7 +265,7 @@ public class InvokerManager  implements AteyeManager
                 json.put("desc", mi.getDesc());
                 json.put("paramCount", mi.getParamCount());
                 json.put("paramDesc", mi.getParamDesc());
-                json.put("invokerType", mi.getType());//Ôö¼Ótype×Ö¶Î
+                json.put("invokerType", mi.getType());//å¢åŠ typeå­—æ®µ
                 JSONArray params = new JSONArray();
                 for(ParamInfo pi:mi.getParams())
                 {
@@ -275,13 +275,13 @@ public class InvokerManager  implements AteyeManager
                 }
                 json.put("params", params);
             }
-            else 
+            else
             {
                 json.put("success", "false");
                 json.put("errorMsg", "Invalid Signature:" + signature);
             }
-        } 
-        else 
+        }
+        else
         {
             json.put("success", "false");
             json.put("errorMsg", "Invalid BeanName:" + beanName);
@@ -293,7 +293,7 @@ public class InvokerManager  implements AteyeManager
     public void init(ServletContext servletContext, PrintStream initLogger,Map<String,Object> beans) {
         this.info = initLogger;
         this.beans=beans;
-        
+
         for(Map.Entry<String, Object> entry:beans.entrySet())
         {
             String beanName=entry.getKey();
@@ -301,7 +301,7 @@ public class InvokerManager  implements AteyeManager
             Map<String/*MethodSignature*/,MethodInfo> invokersOfABean = getAllInvokersOfABean(beanName,bean);
             invokers.put(beanName, invokersOfABean);
         }
-        logger.info("Ô¶³Ì·½·¨µ÷ÓÃÊıÁ¿: "+getMonitoredMethodCount());
+        logger.info("è¿œç¨‹æ–¹æ³•è°ƒç”¨æ•°é‡: "+getMonitoredMethodCount());
     }
 
     private Map<String/*MethodSignature*/,MethodInfo> getAllInvokersOfABean(String beanName,Object bean)
@@ -318,10 +318,10 @@ public class InvokerManager  implements AteyeManager
             if(iv!=null)
             {
                 MethodInfo mi = null;
-                //´æÔÚ´úÀíÀà
+                //å­˜åœ¨ä»£ç†ç±»
                 if(c!=originClass)
                 {
-                    //³¢ÊÔ»ñµÃ´úÀíÀàµÄ¶ÔÓ¦·½·¨£¬±£³ÖAOPµÄ¹¦ÄÜ
+                    //å°è¯•è·å¾—ä»£ç†ç±»çš„å¯¹åº”æ–¹æ³•ï¼Œä¿æŒAOPçš„åŠŸèƒ½
                     try
                     {
                         Method proxyMethod = c.getMethod(m.getName(), m.getParameterTypes());
@@ -331,15 +331,15 @@ public class InvokerManager  implements AteyeManager
                     {
                         info.println("Exception generated when checking the counter method named: "+m.getName()+" from class named: "+c.getCanonicalName());
                         e.printStackTrace(info);
-                        //´æÔÚ´úÀíÀà£¬µ«Ìí¼ÓAteyeInvoker×¢ÊÍµÄ·½·¨Ã»ÓĞ±»´úÀí£¬Ö±½Ó²ÉÓÃTarget£¨Ô­Ê¼Àà£©µÄMethod
+                        //å­˜åœ¨ä»£ç†ç±»ï¼Œä½†æ·»åŠ AteyeInvokeræ³¨é‡Šçš„æ–¹æ³•æ²¡æœ‰è¢«ä»£ç†ï¼Œç›´æ¥é‡‡ç”¨Targetï¼ˆåŸå§‹ç±»ï¼‰çš„Method
                         mi = new MethodInfo(m);
-                        //ÒªÓÃTarget¶ÔÏóinvoke
+                        //è¦ç”¨Targetå¯¹è±¡invoke
                         mi.setTargetSpecial(true);
                     }
                 }
                 else
                 {
-                    //²»´æÔÚ´úÀíÀà
+                    //ä¸å­˜åœ¨ä»£ç†ç±»
                     mi = new MethodInfo(m);
                 }
                 if(iv.mehtodDescrption()!=null&&!"".equals(iv.mehtodDescrption()))
@@ -359,7 +359,7 @@ public class InvokerManager  implements AteyeManager
                     }
                     mi.setParamDesc(paramDesc);
                 }
-                mi.setType(iv.type()); //ÉèÖÃtypeÖµ£»
+                mi.setType(iv.type()); //è®¾ç½®typeå€¼ï¼›
                 invokersOfABean.put(mi.getSignature(), mi);
                 info.println("Monitored Method: "+mi.getSignature());
             }
@@ -372,14 +372,14 @@ public class InvokerManager  implements AteyeManager
         info.println();
         return invokersOfABean;
     }
-    
+
     @Override
     public ManagerType getType() {
         return ManagerType.INVOKER;
     }
 
     private static class MethodInfo
-    {   
+    {
         private String paramDesc="";
         private Method method;
         private String signature;
@@ -389,14 +389,14 @@ public class InvokerManager  implements AteyeManager
 
         private InvokerType type;
         private List<ParamInfo> params = new ArrayList<ParamInfo>();
-        
+
         public MethodInfo(Method method)
         {
             this.method = method;
             this.paramCount = method.getParameterTypes().length;
             generateSignatureAndParamInfo();
         }
-        
+
         private void generateSignatureAndParamInfo()
         {
             StringBuilder sign = new StringBuilder();
@@ -410,7 +410,7 @@ public class InvokerManager  implements AteyeManager
                 sign.append(",");
                 endsWithComma = true;
             }
-            //È¥µô×îºóÒ»¸ö","
+            //å»æ‰æœ€åä¸€ä¸ª","
             if(endsWithComma)
             {
                 sign.deleteCharAt(sign.length()-1);
@@ -419,8 +419,8 @@ public class InvokerManager  implements AteyeManager
             signature=sign.toString();
             desc = signature;
         }
-        
-       
+
+
 
         public InvokerType getType() {
             return type;
@@ -445,7 +445,7 @@ public class InvokerManager  implements AteyeManager
         public Method getMethod() {
             return method;
         }
-        
+
         public String getDesc() {
             return desc;
         }
@@ -461,7 +461,7 @@ public class InvokerManager  implements AteyeManager
         public void setParamDesc(String paramDesc) {
             this.paramDesc = paramDesc;
         }
-        
+
         public boolean isTargetSpecial() {
             return targetSpecial;
         }
@@ -470,7 +470,7 @@ public class InvokerManager  implements AteyeManager
             this.targetSpecial = targetSpecial;
         }
     }
-    
+
     private static class ParamInfo
     {
         private Class<?> paramType;
@@ -483,7 +483,7 @@ public class InvokerManager  implements AteyeManager
         {
             this.paramType = paramType;
         }
-        
+
         public Object convertFromString(String paramValueStr) throws Exception
         {
             Object paramValue = null;
@@ -516,8 +516,8 @@ public class InvokerManager  implements AteyeManager
             return paramValue;
         }
     }
-    
-    //½«JavaµÄ\n×ª»»ÎªÍøÒ³ÖĞµÄ<br/>
+
+    //å°†Javaçš„\nè½¬æ¢ä¸ºç½‘é¡µä¸­çš„<br/>
     private String convertOutputToHtmlForm(String originOuput)
     {
         if(originOuput!=null)
@@ -529,8 +529,8 @@ public class InvokerManager  implements AteyeManager
             return "void";
         }
     }
-    
-    //¼ÆËãÈ«²¿¿ÉÔ¶³Ì¿ØÖÆµÄ·½·¨µÄÊıÁ¿
+
+    //è®¡ç®—å…¨éƒ¨å¯è¿œç¨‹æ§åˆ¶çš„æ–¹æ³•çš„æ•°é‡
     private int getMonitoredMethodCount()
     {
         int count = 0;

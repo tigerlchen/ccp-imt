@@ -34,29 +34,29 @@ import com.alibaba.imt.manager.AteyeManagerContext;
 import com.alibaba.imt.util.ResourceUtil.ImtResourceLoader;
 
 /**
- * IMT WEB Í³Ò»Èë¿Ú
+ * IMT WEB ç»Ÿä¸€å…¥å£
  * @author hongwei.quhw
  *
  */
 public class ImtServlet extends HttpServlet{
     private static final long serialVersionUID = 7504647294332154019L;
-    
-    private static Logger logger = Logger.getLogger("ateyeClient");
-    
-    private static final String DEFAULT_ENCODING = "GBK";
-    
-    //ÅäÖÃÁËspringÈİÆ÷£¬ÇÒÅäÖÃÁËÌØÊâµÄÈİÆ÷Ãû×ÖÊ±£¬ĞèÒª°ÑÈİÆ÷Ãû×Ö×¢Èë
-	private String contextAttribute;
-	private ServletContext servletContext;
-	private String encoding;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		doPost(req, resp);
-	}
-	
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private static Logger logger = Logger.getLogger("ateyeClient");
+
+    private static final String DEFAULT_ENCODING = "GBK";
+
+    //é…ç½®äº†springå®¹å™¨ï¼Œä¸”é…ç½®äº†ç‰¹æ®Šçš„å®¹å™¨åå­—æ—¶ï¼Œéœ€è¦æŠŠå®¹å™¨åå­—æ³¨å…¥
+    private String contextAttribute;
+    private ServletContext servletContext;
+    private String encoding;
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //	    request.setCharacterEncoding(DEFAULT_ENCODING);
 //        response.setCharacterEncoding("gb2312");
 //        response.setContentType("application/json;charset=gb2312");
@@ -67,26 +67,26 @@ public class ImtServlet extends HttpServlet{
             paramMap.put("action", "list");
             String json = manager.service(paramMap);
             JSONArray methods = JSON.parseArray(json);
-            
+
             VelocityContext imtWebContext = new VelocityContext();
             imtWebContext.put("url", request.getRequestURL().toString());
             imtWebContext.put("encoding", DEFAULT_ENCODING);
             response.setContentType("text/html;charset=" + DEFAULT_ENCODING);
-            
+
             ImtGroup group = new ImtGroup("test");
             imtWebContext.put("group", group);
-            
+
             List<ImtGroup> goups = new ArrayList<ImtGroup>();
             goups.add(group);
             imtWebContext.put("groups", goups);
-            
+
             out.println(merge(imtWebContext, "/vm/page.vm"));
         } else {
-            logger.error("Î´ÕÒµ½Õë¶ÔÇëÇóÀàĞÍ:InvokerManager");
+            logger.error("æœªæ‰¾åˆ°é’ˆå¯¹è¯·æ±‚ç±»å‹:InvokerManager");
         }
-	}
-	
-	public static String merge(VelocityContext context, String path) {
+    }
+
+    public static String merge(VelocityContext context, String path) {
         try {
             VelocityEngine ve = new VelocityEngine();
             ve.setProperty("resource.loader", "imt");
@@ -95,40 +95,40 @@ public class ImtServlet extends HttpServlet{
             ve.setProperty("output.encoding", DEFAULT_ENCODING);
             ve.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, new NullLogChute());
             ve.init();
-            
+
             Template template = ve.getTemplate(path, DEFAULT_ENCODING);
-            
+
             StringWriter writer = new StringWriter();
             template.merge(context, writer);
-            
+
             return writer.toString();
         } catch (Exception e) {
-            throw new RuntimeException("äÖÈ¾Ä£°æ³ö´í," , e);
+            throw new RuntimeException("æ¸²æŸ“æ¨¡ç‰ˆå‡ºé”™," , e);
         }
     }
-	
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		servletContext = config.getServletContext();
-	}
-	
-	@Override
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        servletContext = config.getServletContext();
+    }
+
+    @Override
     public final ServletContext getServletContext() {
-		return servletContext;
-	}
-	
-	public final String getContextAttribute() {
-		return contextAttribute;
-	}
-	
-	private Map<String,String> convertParamMap(Map<String,String[]> oriQueryMap) {
+        return servletContext;
+    }
+
+    public final String getContextAttribute() {
+        return contextAttribute;
+    }
+
+    private Map<String,String> convertParamMap(Map<String,String[]> oriQueryMap) {
         Map<String,String> map = new HashMap<String,String>();
         for(Map.Entry<String,String[]> entry : oriQueryMap.entrySet()) {
             if(entry.getValue().length > 0) {
                 try {
                     /*
-                     * ×Ô°æ±¾1.2.0-SNAPSHOTºó£¬ateyeclient»á¶ÔÊäÈë²ÎÊı¶îÍâ½øĞĞÒ»´Îdecode£¨Ó¦ÓÃ·şÎñÆ÷»ádecodeÒ»´Î£©£¬¶øateyeÆ½Ì¨»áÔÚµ÷ÓÃÊ±¶Ô²ÎÊı½øĞĞÁ½´Îencode
-                     * ÓÃÕâÖÖ·½·¨À´Ïû³ıÖĞÎÄ±àÂë²»Í¬Ôì³ÉµÄÂÒÂëÎÊÌâ
+                     * è‡ªç‰ˆæœ¬1.2.0-SNAPSHOTåï¼Œateyeclientä¼šå¯¹è¾“å…¥å‚æ•°é¢å¤–è¿›è¡Œä¸€æ¬¡decodeï¼ˆåº”ç”¨æœåŠ¡å™¨ä¼šdecodeä¸€æ¬¡ï¼‰ï¼Œè€Œateyeå¹³å°ä¼šåœ¨è°ƒç”¨æ—¶å¯¹å‚æ•°è¿›è¡Œä¸¤æ¬¡encode
+                     * ç”¨è¿™ç§æ–¹æ³•æ¥æ¶ˆé™¤ä¸­æ–‡ç¼–ç ä¸åŒé€ æˆçš„ä¹±ç é—®é¢˜
                      */
                     map.put(entry.getKey(), URLDecoder.decode(entry.getValue()[0], "GBK"));
                 } catch (Exception e) {
@@ -141,20 +141,20 @@ public class ImtServlet extends HttpServlet{
         return map;
     }
 
-	public final void setContextAttribute(String contextAttribute) {
-		this.contextAttribute = trimToNull(contextAttribute);
-	}
+    public final void setContextAttribute(String contextAttribute) {
+        this.contextAttribute = trimToNull(contextAttribute);
+    }
 
-	public String getEncoding() {
-		return encoding;
-	}
+    public String getEncoding() {
+        return encoding;
+    }
 
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
 
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 
 }

@@ -9,40 +9,40 @@ import com.alibaba.imt.constants.InvokerType;
 import com.alibaba.imt.util.ImtConstant;
 
 /**
- * Imt×¢½â¼æÈİÀÏµÄinterfaceĞÎÊ½
- * @author åĞ³å
+ * Imtæ³¨è§£å…¼å®¹è€çš„interfaceå½¢å¼
+ * @author é€å†²
  *
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Imt {
 	/**
-	 * ·½·¨ÃèÊö
+	 * æ–¹æ³•æè¿°
 	 * @return
 	 */
 	String mehtodDescrption();
-	
+
 	/**
-	 * ÊÊÓÃ»·¾³¿ª·¢£¬²âÊÔ£¬ÏßÉÏ
+	 * é€‚ç”¨ç¯å¢ƒå¼€å‘ï¼Œæµ‹è¯•ï¼Œçº¿ä¸Š
 	 * @return
 	 */
 	String env() default ImtConstant.ENV_PRODUCT;
-	
+
 	/**
-	 * ·Ö×é
+	 * åˆ†ç»„
 	 * @return
 	 */
 	String[] group() default {};
-	
+
 	/**
-	 * ·½·¨²ÎÊıÃèÊö
+	 * æ–¹æ³•å‚æ•°æè¿°
 	 * @return
 	 */
 	String[] paramDescrption() default {};
-	
+
 	/**
-     * ·½·¨ÀàĞÍ£¬£¨Ö»¶Á¡¢¶ÁĞ´¡¢DailyÖ»¶Á¡¢Daily¶ÁĞ´£©
-     * @return
-     */
-    public InvokerType type() default InvokerType.READ_ONLY;
+	 * æ–¹æ³•ç±»å‹ï¼Œï¼ˆåªè¯»ã€è¯»å†™ã€Dailyåªè¯»ã€Dailyè¯»å†™ï¼‰
+	 * @return
+	 */
+	public InvokerType type() default InvokerType.READ_ONLY;
 }

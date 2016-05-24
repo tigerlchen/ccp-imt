@@ -25,58 +25,58 @@ import com.alibaba.imt.bean.ImtGroup;
 import com.alibaba.imt.support.spring.BeanUtils;
 
 /**
- * Ò³ÃæÉú³É¹¤¾ß
+ * é¡µé¢ç”Ÿæˆå·¥å…·
  * @author hongwei.quhw
  *
  */
 public class ImtPageGen {
-	
+
 	public static void process(ImtWebContext imtWebContext) throws IOException {
 		initInterfaceManagementTool(imtWebContext);
-		
+
 		if (isInitPage(imtWebContext)) {
-			//³õÊ¼»¯Ò³Ãæ
+			//åˆå§‹åŒ–é¡µé¢
 			initGroup(imtWebContext);
 			renderPage(imtWebContext);
 		} else if (isContent(imtWebContext)) {
-			//äÖÈ¾Ö÷ÌåÒ³Ãæ
+			//æ¸²æŸ“ä¸»ä½“é¡µé¢
 			initContent(imtWebContext);
-			renderPage(imtWebContext);	
+			renderPage(imtWebContext);
 		} else if (isMethodInvoke(imtWebContext)){
-			//µ÷·½·¨
+			//è°ƒæ–¹æ³•
 			renderMethodInvoke(imtWebContext);
 		} else if (isJsResource(imtWebContext)) {
-			//¼ÓÔØjsÎÄ¼ş
+			//åŠ è½½jsæ–‡ä»¶
 			renderJsResource(imtWebContext);
 		} else if (isCssResource(imtWebContext)) {
-			//¼ÓÔØcssÎÄ¼ş
+			//åŠ è½½cssæ–‡ä»¶
 			renderCssResource(imtWebContext);
 		} else if (isImgResource(imtWebContext)) {
-			//¼ÓÔØÍ¼Æ¬
+			//åŠ è½½å›¾ç‰‡
 			renderImgResource(imtWebContext);
 		} else {
-			throw new RuntimeException("²ÎÊı´íÎó:" + imtWebContext);
+			throw new RuntimeException("å‚æ•°é”™è¯¯:" + imtWebContext);
 		}
 	}
-	
+
 	private static void initGroup(ImtWebContext imtWebContext) {
 		imtWebContext.put("url", imtWebContext.getUrl());
 		imtWebContext.put("encoding", imtWebContext.getEncoding());
-		
-		//ÑéÖ¤È¨ÏŞ
+
+		//éªŒè¯æƒé™
 		if(!authUser(imtWebContext)) {
 			return;
 		}
-		
+
 		InterfaceManagementTool tool = imtWebContext.getInterfaceManagementTool();
 		tool.initGroups();
-		
+
 		imtWebContext.put("groups", tool.getImtGroups());
 	}
-	
+
 	private static void initContent(ImtWebContext imtWebContext) {
 		initGroup(imtWebContext);
-		
+
 		List<ImtGroup> imtGroups = imtWebContext.getInterfaceManagementTool().getImtGroups();
 		imtWebContext.put("group", getGroupByUuid(imtGroups, imtWebContext.getUuid()));
 		imtWebContext.put("uuid", imtWebContext.getUuid());
@@ -89,82 +89,82 @@ public class ImtPageGen {
 				targetGroup = imtGroup;
 				break;
 			}
-			
+
 			if (null != imtGroup.getNexts()) {
 				targetGroup = getGroupByUuid(imtGroup.getNexts(), uuid);
 			}
-			
+
 			if (null != targetGroup) {
 				break;
 			}
 		}
-		
+
 		return targetGroup;
 	}
-	
+
 	private static boolean authUser(ImtWebContext imtWebContext) {
-		
+
 		ImtPrivilege imtPrivilege = imtWebContext.getInterfaceManagementTool().getImtPrivilege();
-		
+
 		boolean authed = true;
-		
+
 		if (null != imtPrivilege) {
 			authed = (imtPrivilege.authUser() || imtPrivilege.authUser(imtWebContext.getRequest()));
-		} else { 
-			//Ä¬ÈÏ²»Ğ£Ñé
+		} else {
+			//é»˜è®¤ä¸æ ¡éªŒ
 		}
-		
+
 		imtWebContext.put("authed", authed);
-		
+
 		return authed;
 	}
-	
+
 	private static void initInterfaceManagementTool(ImtWebContext imtWebContext) {
 		InterfaceManagementTool interfaceManagementTool = null;
-		
+
 		ApplicationContext applicationContext =  BeanUtils.findWebApplicationContext(imtWebContext.getServletContext(), imtWebContext.getContextAttribute());
-	
-		
-		// Èç¹ûÊÇWebx2,ÒªÇóWebx2ÅäÖÃÈçÏÂµÄService
+
+
+		// å¦‚æœæ˜¯Webx2,è¦æ±‚Webx2é…ç½®å¦‚ä¸‹çš„Service
 		//<service name="BeanFactoryService" class="com.alibaba.service.spring.DefaultBeanFactoryService">
-        //  <property name="bean.descriptors">
-        //    <value>classpath/applicationContext.xml</value>
-        //  </property>
-        //</service>
-        if (null == applicationContext) {
-            WeakReference ref = (WeakReference) imtWebContext.getServletContext().getAttribute("webx.controller");
-            Object webController = ref.get();
+		//  <property name="bean.descriptors">
+		//    <value>classpath/applicationContext.xml</value>
+		//  </property>
+		//</service>
+		if (null == applicationContext) {
+			WeakReference ref = (WeakReference) imtWebContext.getServletContext().getAttribute("webx.controller");
+			Object webController = ref.get();
 
-            try {
-                Class webControllerClass = webController.getClass();
-                Method getServiceMangerMethod = webControllerClass.getMethod("getServiceManager", null);
-                Object serviceManager = getServiceMangerMethod.invoke(webController, null);
+			try {
+				Class webControllerClass = webController.getClass();
+				Method getServiceMangerMethod = webControllerClass.getMethod("getServiceManager", null);
+				Object serviceManager = getServiceMangerMethod.invoke(webController, null);
 
-                Class erviceManagerClass = serviceManager.getClass();
-                Method getServiceMethod = erviceManagerClass.getMethod("getService", String.class);
+				Class erviceManagerClass = serviceManager.getClass();
+				Method getServiceMethod = erviceManagerClass.getMethod("getService", String.class);
 
-                Object beanFactory = getServiceMethod.invoke(serviceManager, "BeanFactoryService");
-                Class beanFactoryClass = beanFactory.getClass();
-                Method getBeanFactory = beanFactoryClass.getMethod("getBeanFactory", null);
-                applicationContext = (ApplicationContext) getBeanFactory.invoke(beanFactory, null);
-            } catch (Exception e) {
-                throw new RuntimeException("ApplicationContext »ñÈ¡´íÎó£º" + imtWebContext);
-            }
-        }
-		
+				Object beanFactory = getServiceMethod.invoke(serviceManager, "BeanFactoryService");
+				Class beanFactoryClass = beanFactory.getClass();
+				Method getBeanFactory = beanFactoryClass.getMethod("getBeanFactory", null);
+				applicationContext = (ApplicationContext) getBeanFactory.invoke(beanFactory, null);
+			} catch (Exception e) {
+				throw new RuntimeException("ApplicationContext è·å–é”™è¯¯ï¼š" + imtWebContext);
+			}
+		}
+
 		if (null != applicationContext) {
 			List<InterfaceManagementTool> tools = BeanUtils.getBeanByType(InterfaceManagementTool.class, applicationContext);
 			if (null != tools && tools.size() > 1) {
-				throw new RuntimeException("ÅäÖÃÁË¶à¸öInterfaceManagementTool£¬ Çë¼ì²é");
+				throw new RuntimeException("é…ç½®äº†å¤šä¸ªInterfaceManagementToolï¼Œ è¯·æ£€æŸ¥");
 			}
-			
+
 			interfaceManagementTool= tools.get(0);
 		}
-		
+
 		if (null == interfaceManagementTool) {
-			throw new RuntimeException("InterfaceManagementTool,Ä¿Ç°½öÖ§³Ö»ùÓÚspringµÄÅäÖÃ£¬ÇëÄÍĞÄµÈºò!");
+			throw new RuntimeException("InterfaceManagementTool,ç›®å‰ä»…æ”¯æŒåŸºäºspringçš„é…ç½®ï¼Œè¯·è€å¿ƒç­‰å€™!");
 		}
-		
+
 		imtWebContext.setInterfaceManagementTool(interfaceManagementTool);
 	}
 }

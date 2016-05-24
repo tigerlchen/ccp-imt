@@ -28,10 +28,6 @@ import java.util.jar.JarInputStream;
 
 import com.alibaba.imt.scanner.Scanner;
 
-/**
- * @author yansong.baiys
- *
- */
 public class SimpleClassScanner implements Scanner {
 
     @Override

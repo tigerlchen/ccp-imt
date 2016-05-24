@@ -1,10 +1,5 @@
 package com.alibaba.imt.bean;
 
-/**
- * 存载imt注解属性信息
- * @author hongwei.quhw
- *
- */
 public class ImtInfo {
     private String mehtodDescrption;
     

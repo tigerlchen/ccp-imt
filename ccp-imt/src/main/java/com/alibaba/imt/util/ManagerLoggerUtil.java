@@ -10,28 +10,28 @@ import com.alibaba.imt.constants.ManagerType;
 
 public class ManagerLoggerUtil
 {
-    //ÈÕÖ¾ÈİÁ¿ÏŞÖÆ£º1M
+    //æ—¥å¿—å®¹é‡é™åˆ¶ï¼š1M
     public static final int _MEM_LOG_LIMIT = 1024*1024;
-    
-    //¾ßÌåManagerµÄÈÕÖ¾Êä³öÁ÷
+
+    //å…·ä½“Managerçš„æ—¥å¿—è¾“å‡ºæµ
     public static final Map<ManagerType,AteyeOutputStream> streamMap = new HashMap<ManagerType,AteyeOutputStream>();
-    //BootstrapµÄÈÕÖ¾Êä³öÁ÷
+    //Bootstrapçš„æ—¥å¿—è¾“å‡ºæµ
     private static AteyeOutputStream bootstrapStream = null;
-    //¾ßÌåManagerµÄÆô¶¯ÈÕÖ¾
+    //å…·ä½“Managerçš„å¯åŠ¨æ—¥å¿—
     public static final Map<ManagerType,String> initLogs = new HashMap<ManagerType,String>();
-    //ÏµÍ³Æô¶¯ÈÕÖ¾£¨»ñµÃbeanÈİÆ÷ÈÕÖ¾£©
+    //ç³»ç»Ÿå¯åŠ¨æ—¥å¿—ï¼ˆè·å¾—beanå®¹å™¨æ—¥å¿—ï¼‰
     public static String bootstrapLog = null;
-    
-    //»ñµÃÒ»°ãManagerµÄÆô¶¯ÈÕÖ¾Logger
+
+    //è·å¾—ä¸€èˆ¬Managerçš„å¯åŠ¨æ—¥å¿—Logger
     public static PrintStream getManagerLogger(ManagerType managerType)
     {
         AteyeOutputStream ateyeOutputStream = new AteyeOutputStream(new ByteArrayOutputStream(), _MEM_LOG_LIMIT);
         streamMap.put(managerType, ateyeOutputStream);
         return new PrintStream(ateyeOutputStream, true);
     }
-    
-    
-    //»ñµÃÏµÍ³Æô¶¯ÈÕÖ¾Logger
+
+
+    //è·å¾—ç³»ç»Ÿå¯åŠ¨æ—¥å¿—Logger
     public static synchronized PrintStream getBootstrapLogger()
     {
         if(bootstrapStream ==null)
@@ -40,21 +40,21 @@ public class ManagerLoggerUtil
         }
         return new PrintStream(bootstrapStream, true);
     }
-    
-    //½«ÏµÍ³Æô¶¯ÈÕÖ¾LoggerÖÃÎªÎŞĞ§
+
+    //å°†ç³»ç»Ÿå¯åŠ¨æ—¥å¿—Loggerç½®ä¸ºæ— æ•ˆ
     public static void invalidBootstrapStream()
     {
         if(bootstrapStream!=null)
         {
             bootstrapStream.invalid();
             bootstrapLog = new String(bootstrapStream.getTarget().toByteArray()).replaceAll("\n", "<br/>");
-            //ÊÍ·Å¿Õ¼ä
+            //é‡Šæ”¾ç©ºé—´
             bootstrapStream.target = null;
             bootstrapStream = null;
         }
     }
-    
-    //½«Ò»°ãManagerµÄLoggerÖÃÎªÎŞĞ§
+
+    //å°†ä¸€èˆ¬Managerçš„Loggerç½®ä¸ºæ— æ•ˆ
     public static void invalidInitLogger(ManagerType managerType)
     {
         AteyeOutputStream ateyeOutputStream = streamMap.remove(managerType);
@@ -62,12 +62,12 @@ public class ManagerLoggerUtil
         {
             ateyeOutputStream.invalid();
             initLogs.put(managerType, new String(ateyeOutputStream.getTarget().toByteArray()).replaceAll("\n", "<br/>"));
-            //ÊÍ·Å¿Õ¼ä
+            //é‡Šæ”¾ç©ºé—´
             ateyeOutputStream.target = null;
         }
     }
-    
-    //½«Throwable´òÓ¡ÎªString
+
+    //å°†Throwableæ‰“å°ä¸ºString
     public static String convertThrowableToString(Throwable t)
     {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
