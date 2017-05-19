@@ -2,9 +2,9 @@
 <head>
     <meta charset="$encoding"/>
     <title>IMT</title>
-    <link rel="stylesheet" type="text/css" href="http://www.xiaoyaochong.net/simpletree.css"/>
-    <script type="text/javascript" src="http://www.xiaoyaochong.net/jquery.js"></script>
-    <script type="text/javascript" src="http://www.xiaoyaochong.net/simpletree.js"></script>
+    <link rel="stylesheet" type="text/css" href="ttps://tigerlchen.github.io/resource.github.io/simpletree.css"/>
+    <script type="text/javascript" src="https://tigerlchen.github.io/resource.github.io/jquery.js"></script>
+    <script type="text/javascript" src="ttps://tigerlchen.github.io/resource.github.io/simpletree.js"></script>
 
     <style>
         body {
