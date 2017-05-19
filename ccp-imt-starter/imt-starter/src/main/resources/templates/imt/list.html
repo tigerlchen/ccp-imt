@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head(title='Imt : View all')">
+	<title>Imt : View all</title>
+</head>
+<body>
+<script type="application/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="application/javascript">
+function syntaxHighlight(json) {
+if (typeof json != 'string') {
+json = JSON.stringify(json, undefined, 2);
+}
+json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+var cls = 'number';
+if (/^"/.test(match)) {
+if (/:$/.test(match)) {
+cls = 'key';
+} else {
+cls = 'string';
+}
+} else if (/true|false/.test(match)) {
+cls = 'boolean';
+} else if (/null/.test(match)) {
+cls = 'null';
+}
+return '<span class="' + cls + '">' + match + '</span>';
+});
+}
+</script>
+<style>
+	pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+	.string { color: green; }
+	.number { color: darkorange; }
+	.boolean { color: blue; }
+	.null { color: magenta; }
+	.key { color: red; }
+</style>
+
+<div class="container">
+	<div th:replace="fragments :: navbar"></div>
+	<h1>Imt : View all</h1>
+	<div class="container">
+		<table class="table table-bordered table-striped" style="word-break:break-all; word-wrap:break-all;">
+			<thead>
+			<tr>
+				<td>ID</td>
+				<td>Bean</td>
+				<td>Method</td>
+				<td>Param</td>
+				<td>Operation</td>
+			</tr>
+			</thead>
+			<tbody>
+			<tr th:each="message : ${messages}">
+				<form name="multiform" id="multiform" action="/imtjons" method="GET" enctype="multipart/form-data">
+				<td th:text="${message.id}">1</td>
+				<td th:text="${message.beanName}">1</td>
+				<td th:text="${message.methodName}">1</td>
+				<td>
+					<table class="table table-bordered table-striped">
+						<tr th:each="imtParam : ${message.params}">
+							<td th:text="${imtParam.paramClassName}">1</td>
+							<td th:text="${imtParam.paramName}">1</td>
+							<td> <input th:id="'input_' + ${message.id} + '_' +  ${imtParam.id}"/></td>
+						</tr>
+					</table>
+				</td>
+					<td>  <button th:data-paramsize="${message.paramSize}" type="button" th:value="${message.id}">Invoke</button></td>
+				</form>
+			</tr>
+			<tr>
+				<td id="message" colspan="5"><pre id="result"></pre></td>
+			</tr>
+			</tbody>
+		</table>
+
+	</div>
+</div>
+
+<script type="application/javascript">
+    $("button").click(function(e) {
+        messageId = $(this).val();
+        paramSize = $(this).data('paramsize');
+        var arrayObj = new Array();
+        for(var i = 1; i <= paramSize; i++ ) {
+            arrayObj.push($("#input_" + messageId + "_" + i).val());
+		}
+
+
+        $.ajax({
+            type: "GET",
+            url: "/imt_json",
+            data: {
+                id: $(this).val(), // < note use of 'this' here
+				param: JSON.stringify(arrayObj),
+            },
+            success: function(result) {
+                // alert(result);
+                //$("#message").empty().append(result);
+                //$("#message").removeClass("loader");
+
+                var json = JSON.parse(result);
+                $('#result').html(syntaxHighlight(json));
+
+            },
+            error: function(result) {
+                alert('error');
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
